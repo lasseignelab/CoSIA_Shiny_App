@@ -1,0 +1,13 @@
+name: fixer_app
+title: fixer_app
+username:
+account: nsdevoss
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6943250
+bundleId: 6316705
+url: https://nsdevoss.shinyapps.io/fixer_app/
+when: 1663601475.4269
+lastSyncTime: 1663601475.42693
+asMultiple: FALSE
+asStatic: FALSE
