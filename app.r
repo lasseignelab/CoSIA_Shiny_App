@@ -5,15 +5,16 @@ library(miceadds)
 library(shinythemes)
 source.all("cosia_scripts")
 tissues_by_species <- read.csv("tissues_by_species.csv")
-
-# zebrafish_specific <- read.csv("Filtered_Dr_BgeeDB.RData")
+#I MODIFIED GETTISSUEEXPRESSION TO FIX THE FOLLOWING
+#zebrafish_specific <- read.csv("Filtered_Dr_BgeeDB.RData")
 # mouse_specific <- read.csv("Filtered_Mm_BgeeDB.RData")
 # rat_specific <- read.csv("Filtered_Rn_BgeeDB.RData")
-# 
-# filter_zebrafish <- zebrafish_specific
+
+#filter_zebrafish <- zebrafish_specific
 # filter_mouse <- mouse_specific
 # filter_rat <- rat_specific
 
+#bgee_species <- filter_zebrafish
 species_list <- c("H. sapiens",
                   "C. elegans",
                   "D. melanogaster",
@@ -41,8 +42,7 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                                               a(href="https://www.bioconductor.org/","Bioconductor"),
                                               p(),
                                               a(href="https://bgee.org/","Bgee"),
-                                              p(),
-                                              a(href="https://sites.uab.edu/precisionmedicine/center-for-precision-animal-modeling-c-pam/", "C-PAM")
+                                              p()
                                               
                                             
                                            )
@@ -51,13 +51,14 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                           ),
                           mainPanel(
                             HTML("
-                            <font size='+1'>
+                            
                             <h1>CoSIA ShinyApp</h1>
                             <!--<h2><b>C</b>r<b>o</b>ss <b>S</b>pecies<b> I</b>nvestigation and <b>A</b >nalysis</h2>-->
                             <h2>Cross Species Investigation and Analysis</h2>
-                            <p>Rare diseases are difficult to diagnose, analyze, and treat because of the lack of data regarding the underlying causes and symptoms
-                            of the disease. To combat this lack of information, researchers are implanting suspected genes into other organisms to observe and analyze
-                            the new phenotype. Because of the ethical issues surrounding modifying human genomes, other organisms must be used as a model.</p>
+                            <p>Because of the ethical issues surrounding modifying human genomes, other organisms must be used as a model. Organismal models are used to
+                            study many biological processes including rare disease mechanisms, cellular pathways, and phenotypic expression. Because of the characteristics
+                            the organisms share with humans, these models help researches understand these processes at a higher level, allowing for further scientific
+                            discovery in the field of genetics.</p>
                             <p>An early step in developing a disease model is selecting the best model organism in which to implement the target genetic change. The R
                             package CoSIA offers insight into this decision by providing tools to compare and visualize curated wild-type RNA-Seq gene expression data
                             across species and tissues using variation and diversity metrics. The package provides additional tools for streamlined ortholog and id mapping.
@@ -100,7 +101,7 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             <p>Instead of visualizing a gene for one species and multiple tissues, Module 4 visualizes a gene for one tissue and multiple
                             species. After the user selects all the species to be analyzed, the ShinyApp provides a list of available tissues that exist
                             in each of the selected species. The available species are the same as the Cross Tissue Expression Module.</p>
-                            </font>
+                            
                                          ")
                             
                           )
@@ -130,15 +131,21 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             HTML("
                                  <h2>Instructions</h2>
                                  <ol>
-                                    <li>Start by pasting genes into the text box, 1 gene per line. Make sure all genes follow the nomenclature guidelines for its gene ID type. See below:
+                                    <li>Paste genes into the text box, 1 gene per line. Make sure all genes follow the nomenclature guidelines for its gene ID type. See below:
                                         <ul>
-                                            <li><a href=''>Entrez ID</a></li<>
+                                            <li><a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1761442/'>Entrez ID</a></li<>
                                             <li><a href='https://www.ensembl.org/Help/Faq?id=488;redirect=no'>Ensembl</a></li<>
                                             <li><a href='http://www.ensembl.org/info/genome/stable_ids/index.html'>Ensembl With Version</a></li<>
                                             <li><a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7494048/'>Gene Name</a></li<>
-                                            <li><a href=''>Symbol</a></li<>
-                                        </ul>
-                                    </li>
+                                            <li><a href='https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7494048/'>Symbol</a></li<>
+                                        </ul></li>
+                                    <li>Select the species the genes came from.</li>
+                                    <li>Select the species for the genes to be converted to. If you do not want to convert between species, choose the same species as Step 2.</li>
+                                    <li>Select the gene ID type for the genes you input.</li>
+                                    <li>Select any number of gene ID types for the genes to be converted into.</li>
+                                    <li>Select the tool that will carry out the conversion.</li>
+                                    <li>If you are converting between species, select an Ortholog Database. Otherwise, select None.</li>
+                                    <li>Submit.</li>
                                  </ol>
                                  ")
                           )
@@ -153,6 +160,17 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             actionButton("tissueGo","Submit")
                           ),
                           mainPanel(
+                            HTML("
+                                  <h2>Instructions</h2>
+                                  <ol>
+                                      <li>Paste a single gene in <a href=''>Ensemble</a> format.</li>
+                                      <li>Select the species that the gene came from.</li>
+                                      <li>Select any number of tissues to be plotted.</li>
+                                      <li>Submit.</li>
+
+                                  </ol>
+                                  
+                                 "),
                             plotlyOutput("tissue_plot")
                           )
                  ),
@@ -163,18 +181,42 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             checkboxGroupInput("species_output_species", "Output Species",
                                                choices=colnames(tissues_by_species)),
                             selectInput("species_tissue","Select Tissue Type After Selecting Species", choices=""),
-                            actionButton("speciesGo","Submit"),
+                            actionButton("speciesGo","Submit")
+                          ),
                             mainPanel(
+                              HTML("
+                                <h2>Instructions</h2>
+                                <ol>
+                                  <li>Paste a single gene in <a href=''>Ensemble</a> format.</li>
+                                  <li>Select the species that the gene came from.</li>
+                                  <li>Select any number of species to be plotted.</li>
+                                  <li>Select a tissue to be plotted.</li>
+                                  <li>Submit.</li>
+                                </ol>
+                                "),
                               plotlyOutput("species_plot")
                             )
-                          )
-                 ),
-                 tabPanel("FAQs",
+                          
                  ),
                  tabPanel("Contact Us",
                           HTML("nsdevoss@uab.edu")
                  ),
                  tabPanel("Documentation",
+                          # markdown("
+                          # <img src='vignette/empty_get_conversion.png' alt='Figure 1' width='800px'>
+                          # <img src='vignette/filled_get_conversion.png' alt='Figure 1' width='800px'>
+                          # <img src='vignette/results_get_conversion.png' alt='Figure 1' width='800px'>
+                          # <img src='vignette/filled_get_tissue.png' alt='Figure 1' width='800px'>
+                          # <img src='vignette/results_get_tissue.png' alt='Figure 1' width='800px'>
+                          # ")
+                          markdown("
+                                   The following is a demonstration of how to use this website.
+                                   <h1>Gene Identifier Conversion</h1>
+                                   I have a patient with a suspected mutation in the gene ENSG00000104313 and want to see if the zebrafish is a viable model organism.
+                                   I go to the Gene Identifier Conversion tab.
+                                   <img src='vignette/empty_get_conversion.png' alt='Figure 1' width='800px'>
+                                   
+                                   ")
                  )
                  
 )
@@ -418,8 +460,8 @@ server <- function(input,output,session){
       convert_ids <- new("CosiaAnnotate",
                          input=input_gene,
                          input_species=input_id_species,
-                         input_id="Ensembl.id",
-                         output_ids="Ensembl.id",
+                         input_id="Ensembl_id",
+                         output_ids="Ensembl_id",
                          output_species=inter_species,
                          tool="biomaRt",
                          ortholog_database="HomoloGene")

@@ -1,6 +1,11 @@
 setMethod("getTissueExpression", signature(object = "CosiaExpressTissue"), function(object) {
     # user's input of the function
-    if (object@tissues == "all tissues") {
+  print("THE SPECIES")#
+  # bgee_species <-read.csv("Filtered_Dr_BgeeDB.RData")#
+  load("Filtered_Dr_BgeeDB.RData")#
+  bgee_species <- zebrafish_specific
+  print(colnames(bgee_species))#
+  if (object@tissues == "all tissues") {
         gene_species <- object@gene_species
         if (gene_species == "mus_musculus") {
           bgee_species <- filter_mouse
@@ -9,7 +14,7 @@ setMethod("getTissueExpression", signature(object = "CosiaExpressTissue"), funct
           bgee_species <- filter_rat
         }
         if (gene_species == "danio_rerio") {
-          bgee_species <- filter_zebrafish
+          bgee_species <- zebrafish_specific
         }
         if (gene_species == "homo_sapiens") {
           bgee_species <- filter_human
@@ -48,7 +53,9 @@ setMethod("getTissueExpression", signature(object = "CosiaExpressTissue"), funct
           bgee_species <- rat_specific
         }
         if (gene_species == "danio_rerio") {
-          bgee_species <- zebrafish_specific
+          #bgee_species <- zebrafish_specific
+
+      
         }
         if (gene_species == "homo_sapiens") {
           bgee_species <- human_specific
