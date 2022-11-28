@@ -44,7 +44,7 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                                               a(href="https://bgee.org/","Bgee"),
                                               p()
                                               
-                                            
+                                              
                                            )
                                          )
                                        })
@@ -163,7 +163,7 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             HTML("
                                   <h2>Instructions</h2>
                                   <ol>
-                                      <li>Paste a single gene in <a href=''>Ensemble</a> format.</li>
+                                      <li>Paste a single gene in <a href=''>Ensembl</a> format.</li>
                                       <li>Select the species that the gene came from.</li>
                                       <li>Select any number of tissues to be plotted.</li>
                                       <li>Submit.</li>
@@ -183,19 +183,19 @@ ui <- navbarPage(theme=shinytheme("sandstone"),HTML("<img src='lablogo.png' widt
                             selectInput("species_tissue","Select Tissue Type After Selecting Species", choices=""),
                             actionButton("speciesGo","Submit")
                           ),
-                            mainPanel(
-                              HTML("
+                          mainPanel(
+                            HTML("
                                 <h2>Instructions</h2>
                                 <ol>
-                                  <li>Paste a single gene in <a href=''>Ensemble</a> format.</li>
+                                  <li>Paste a single gene in <a href=''>Ensembl</a> format.</li>
                                   <li>Select the species that the gene came from.</li>
                                   <li>Select any number of species to be plotted.</li>
                                   <li>Select a tissue to be plotted.</li>
                                   <li>Submit.</li>
                                 </ol>
                                 "),
-                              plotlyOutput("species_plot")
-                            )
+                            plotlyOutput("species_plot")
+                          )
                           
                  ),
                  tabPanel("Contact Us",
@@ -415,7 +415,7 @@ server <- function(input,output,session){
     }
     
   })
-  #-------
+  #----
   observeEvent(input$species_output_species,{
     output_id_species <- input$species_output_species
     if(length(output_id_species)>1){
