@@ -7,16 +7,14 @@ library(tidyverse)
 library(shinysky)
 options(shiny.maxRequestSize = 30*1024^2)
 tissues_by_species <- data.frame(read.csv("tissues_by_species.csv"))
-species_list <- c("c_elegans",
+species_list <- c("h_sapiens",
+                  "c_elegans",
                   "d_melanogaster",
                   "m_musculus",
                   "d_rerio",
-                  "h_sapiens",
                   "r_norvegicus")
-id_type_list <- c("Entrez_id",
-                  "Ensembl_id",
-                  "Ensembl_id_version",
-                  "Gene_name",
+id_type_list <- c("Ensembl_id",
+                  "Entrez_id",
                   "Symbol")
 tool_list <- c("annotationDBI",
                "biomaRt")
@@ -29,41 +27,52 @@ ui <- fluidPage(
   sidebarPanel(
     #Gene Input----
     wellPanel(HTML("<h4>Gene Input</h4>"),
-      textAreaInput("gene_ids","Paste IDs"),
-      fileInput("gene_file", "Upload CSV File",
-                multiple = FALSE,
-                accept = ".csv"),
-      selectInput("gene_input_species", "Input Species",
-                  choices=species_list),
-      selectInput("gene_input_id_type", "Input ID type",
-                  choices=id_type_list)
+              textAreaInput("gene_ids","Paste IDs"),
+              fileInput("gene_file", "Upload CSV File",
+                        multiple = FALSE,
+                        accept = ".csv"),
+              selectInput("gene_input_species", "Input Species",
+                          choices=species_list),
+              selectInput("gene_input_id_type", "Input ID type",
+                          choices=id_type_list)
     ),
     #ID Conversion----
     wellPanel(HTML("<h4>ID Conversion</h4>"),
-      checkboxGroupInput("conversion_output_species", "Output Species",
-                         choices=species_list),
-      checkboxGroupInput("conversion_output_id_types", "Output ID types",
-                         choices=id_type_list),
-      selectInput("conversion_tool", "Tool",
-                  choices=tool_list),
-      selectInput("conversion_ortholog_database","Otholog Database",
-                  choices=homolog_database_list),
-      actionButton("conversion_go","Convert IDs"),
-      actionButton("skip_go","Skip Conversion")
+              checkboxGroupInput("conversion_output_species", "Output Species",
+                                 choices=species_list),
+              checkboxGroupInput("conversion_output_id_types", "Output ID types",
+                                 choices=id_type_list),
+              selectInput("conversion_tool", "Tool",
+                          choices=tool_list),
+              selectInput("conversion_ortholog_database","Otholog Database",
+                          choices=homolog_database_list),
+              actionButton("conversion_go","Convert IDs"),
+              actionButton("skip_go","Skip Conversion")
     ),
     #Plot Expression----
     wellPanel(HTML("<h4>Plot Expression</h4>"),
-      select2Input("plot_gene", "gene",choices=NULL),
-      checkboxGroupInput("plot_species", "species",choices=species_list),
-      checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
-      checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
-      actionButton("plot_go", "Plot")
-    )#----
+              select2Input("plot_gene", "gene",choices=NULL),
+              checkboxGroupInput("plot_species", "species",choices=species_list),
+              checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
+              checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
+              actionButton("plot_go", "Plot")
+    ),#----
+    wellPanel(HTML("<h4>Plot DS</h4>"),
+              checkboxGroupInput("ds_species", "species",choices=species_list),
+              checkboxGroupInput("ds_tissue","tissues",choices="Select Species First"),
+              selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue", "DS_Tissue_all", "DS_Gene_all")),
+              actionButton("ds_go", "Plot")
+              
+    ),
+    wellPanel(HTML("<h4>Plot CV</h4>"),
+              
+    )        
   ),
   #Main Panel----
   mainPanel(
     dataTableOutput("conversion_table"),
-    plotlyOutput("plot")
+    uiOutput("plots"),
+    plotOutput("ds_plot")
   )#----
 )
 server <- function(input,output,session){
@@ -87,7 +96,7 @@ server <- function(input,output,session){
     x[length(x)] <- substr(x[length(x)],1,nchar(x[length(x)])-1)
     x=paste(x,collapse="")
     updateTextAreaInput("gene_ids", value=x, session=session)
-   
+    
   })
   
   observeEvent(input$conversion_go,{
@@ -107,7 +116,7 @@ server <- function(input,output,session){
     global_cosia@output_ids <<- conversion_output_id_types
     global_cosia@mapping_tool <<- conversion_tool
     global_cosia@ortholog_database <<-  conversion_ortholog_database
- 
+    
     global_cosia <<- getConversions(global_cosia)
     output$conversion_table <- renderDataTable({global_cosia@converted_id})
     for_input <- global_cosia@converted_id
@@ -126,7 +135,7 @@ server <- function(input,output,session){
     tib <- getTissues(input$plot_species)
     vec <- pull(tib,Common_Anatomical_Entity_Name)
     updateCheckboxGroupInput("plot_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(input$plot_species, collapse=", ")))
-  
+    
   })
   
   observeEvent(input$plot_go,{
@@ -134,23 +143,86 @@ server <- function(input,output,session){
     global_cosia@map_species <<- input$plot_species
     global_cosia@map_tissues <<- input$plot_tissue
     global_cosia <<- getGEx(global_cosia)
-    gene <- input$plot_gene
-    gene <- unlist(strsplit(gene,split = "/"))
-    tissue <- input$plot_tissue[1]
-
-    print(paste("global_cosia@gene_set",global_cosia@gene_set))
-    print(paste("global_cosia@i_species",global_cosia@i_species))
-    print(paste("global_cosia@o_species",global_cosia@o_species))
-    print(paste("global_cosia@input_id",global_cosia@input_id))
-    print(paste("global_cosia@output_ids",global_cosia@output_ids))
-    print(paste("global_cosia@mapping_tool",global_cosia@mapping_tool))
-    print(paste("global_cosia@ortholog_database",global_cosia@ortholog_database))
-    print(paste("global_cosia@map_species",global_cosia@map_species))
-    print(paste("global_cosia@map_tissues",global_cosia@map_tissues))
+    genes <- input$plot_gene
+    #genes <- unlist(strsplit(gene,split = "/"))
+    tissues <- input$plot_tissue
+    species <- input$plot_species
+    print(tissues)
     
-    print(gene[1])
+    if(input$plot_by %% 2==0){
+      gene_tissue <- NULL
+      for(gene in genes){
+        for(tissue in tissues){
+          gene_tissue <- c(gene_tissue,paste(unlist(strsplit(gene,split = "/"))[1], tissue, sep="_"))
+        }
+      }
+      output$plots <- renderUI({
+        plot_output_list <- lapply(gene_tissue,function(i){
+          plotname <- paste("plot",i,sep="_")
+          plotlyOutput(plotname)
+        })
+        do.call(tagList, plot_output_list)
+      })
+      
+      for(gene in genes){
+        for(tissue in tissues){
+          local({
+            my_gene <- gene
+            my_tissue <- tissue
+            plotname <- paste("plot",unlist(strsplit(my_gene,split = "/"))[1],my_tissue, sep="_")
+            output[[plotname]] <- renderPlotly({
+              plotSpeciesGEx(global_cosia, my_tissue,unlist(strsplit(my_gene,split = "/"))[1])
+            })
+          })
+        }
+      }
+      
+    }else{
+      gene_species <- NULL
+      for(gene in genes){
+        for(spec in species){
+          gene_species <- c(gene_species,paste(unlist(strsplit(gene,split = "/"))[1], spec, sep="_"))
+        }
+      }
+      output$plots <- renderUI({
+        plot_output_list <- lapply(gene_species,function(i){
+          plotname <- paste("plot",i,sep="_")
+          plotlyOutput(plotname)
+        })
+        do.call(tagList, plot_output_list)
+      })
+      
+      for(gene in genes){
+        for(spec in species){
+          local({
+            my_gene <- gene
+            my_spec <- spec
+            plotname <- paste("plot",unlist(strsplit(my_gene,split = "/"))[1],my_spec, sep="_")
+            output[[plotname]] <- renderPlotly({
+              plotTissueGEx(global_cosia, my_spec,unlist(strsplit(my_gene,split = "/"))[1])
+            })
+          })
+        }
+      }
+    }
+    print("done")
+  })
+  
+  observeEvent(input$ds_species,{
+    tib <- getTissues(input$ds_species)
+    vec <- pull(tib,Common_Anatomical_Entity_Name)
+    updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(input$ds_species, collapse=", ")))
     
-    output$plot <- renderPlotly({plotSpeciesGEx(global_cosia,tissue, gene[1])})
+  })
+  
+  observeEvent(input$ds_go,{
+    global_cosia@metric_type<<-input$ds_metric
+    global_cosia@map_tissues <- input$ds_tissue
+    global_cosia@map_species <- input$ds_species
+    global_cosia <- getGExMetrics(global_cosia)
+    output$ds_plot <- renderPlot({
+      plotDSGEx(global_cosia)
+    })
     
   })
 }
