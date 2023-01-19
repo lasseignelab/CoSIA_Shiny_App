@@ -1,6 +1,6 @@
 .Rproj.user
 .Rhistory
-.RData
+*.RData
 .Ruserdata
 Filtered_Dr_BgeeDB.RData
 .DS_Store

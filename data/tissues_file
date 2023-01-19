@@ -1,0 +1,273 @@
+Anatomical_entity_name,Anatomical_entity_ID,Species
+blastula,UBERON:0000307,Danio_rerio
+bone element,UBERON:0001474,Danio_rerio
+brain,UBERON:0000955,Danio_rerio
+camera-type eye,UBERON:0000019,Danio_rerio
+early embryo,UBERON:0019248,Danio_rerio
+embryo,UBERON:0000922,Danio_rerio
+gastrula,UBERON:0004734,Danio_rerio
+granulocyte,CL:0000094,Danio_rerio
+head,UBERON:0000033,Danio_rerio
+head kidney,UBERON:0007132,Danio_rerio
+heart,UBERON:0000948,Danio_rerio
+intestine,UBERON:0000160,Danio_rerio
+larva,UBERON:0002548,Danio_rerio
+liver,UBERON:0002107,Danio_rerio
+mature ovarian follicle,UBERON:0003982,Danio_rerio
+mesonephros,UBERON:0000080,Danio_rerio
+muscle tissue,UBERON:0002385,Danio_rerio
+ovary,UBERON:0000992,Danio_rerio
+pharyngeal gill,UBERON:0000206,Danio_rerio
+retina,UBERON:0000966,Danio_rerio
+spleen,UBERON:0002106,Danio_rerio
+swim bladder,UBERON:0006860,Danio_rerio
+tail,UBERON:0002415,Danio_rerio
+testis,UBERON:0000473,Danio_rerio
+zone of skin,UBERON:0000014,Danio_rerio
+adult mammalian kidney,UBERON:0000082,Rattus_norvegicus
+brain,UBERON:0000955,Rattus_norvegicus
+cerebellum,UBERON:0002037,Rattus_norvegicus
+colon,UBERON:0001155,Rattus_norvegicus
+duodenum,UBERON:0002114,Rattus_norvegicus
+esophagus,UBERON:0001043,Rattus_norvegicus
+frontal cortex,UBERON:0001870,Rattus_norvegicus
+heart,UBERON:0000948,Rattus_norvegicus
+ileum,UBERON:0002116,Rattus_norvegicus
+jejunum,UBERON:0002115,Rattus_norvegicus
+kidney,UBERON:0002113,Rattus_norvegicus
+liver,UBERON:0002107,Rattus_norvegicus
+lung,UBERON:0002048,Rattus_norvegicus
+ovary,UBERON:0000992,Rattus_norvegicus
+pancreas,UBERON:0001264,Rattus_norvegicus
+quadriceps femoris,UBERON:0001377,Rattus_norvegicus
+skeletal muscle tissue,UBERON:0001134,Rattus_norvegicus
+spleen,UBERON:0002106,Rattus_norvegicus
+stomach,UBERON:0000945,Rattus_norvegicus
+testis,UBERON:0000473,Rattus_norvegicus
+thymus,UBERON:0002370,Rattus_norvegicus
+adrenal gland,UBERON:0002369,Mus_musculus
+adult mammalian kidney,UBERON:0000082,Mus_musculus
+Ammon's horn,UBERON:0001954,Mus_musculus
+animal zygote,CL:0000365,Mus_musculus
+bone marrow,UBERON:0002371,Mus_musculus
+brain,UBERON:0000955,Mus_musculus
+cerebellar cortex,UBERON:0002129,Mus_musculus
+cerebellum,UBERON:0002037,Mus_musculus
+cerebral cortex,UBERON:0000956,Mus_musculus
+colon,UBERON:0001155,Mus_musculus
+cortex of kidney,UBERON:0001225,Mus_musculus
+cortical plate,UBERON:0005343,Mus_musculus
+dentate gyrus of hippocampal formation granule cell,CL:2000089,Mus_musculus
+duodenum,UBERON:0002114,Mus_musculus
+ectoplacental cone,UBERON:0004364,Mus_musculus
+embryonic brain,UBERON:6001060,Mus_musculus
+embryonic facial prominence,UBERON:0012314,Mus_musculus
+embryonic post-anal tail,UBERON:0007144,Mus_musculus
+epiblast (generic),UBERON:0002532,Mus_musculus
+esophagus,UBERON:0001043,Mus_musculus
+forebrain,UBERON:0001890,Mus_musculus
+forelimb bud,UBERON:0005417,Mus_musculus
+frontal cortex,UBERON:0001870,Mus_musculus
+ganglionic eminence,UBERON:0004023,Mus_musculus
+granulocyte,CL:0000094,Mus_musculus
+heart,UBERON:0000948,Mus_musculus
+hindbrain,UBERON:0002028,Mus_musculus
+hindlimb bud,UBERON:0005418,Mus_musculus
+hindlimb stylopod muscle,UBERON:0004252,Mus_musculus
+hypothalamus,UBERON:0001898,Mus_musculus
+ileum,UBERON:0002116,Mus_musculus
+intestine,UBERON:0000160,Mus_musculus
+islet of Langerhans,UBERON:0000006,Mus_musculus
+jejunum,UBERON:0002115,Mus_musculus
+kidney,UBERON:0002113,Mus_musculus
+lens of camera-type eye,UBERON:0000965,Mus_musculus
+limb,UBERON:0002101,Mus_musculus
+lip,UBERON:0001833,Mus_musculus
+liver,UBERON:0002107,Mus_musculus
+lung,UBERON:0002048,Mus_musculus
+midbrain,UBERON:0001891,Mus_musculus
+multicellular organism,UBERON:0000468,Mus_musculus
+muscle tissue,UBERON:0002385,Mus_musculus
+neural tube,UBERON:0001049,Mus_musculus
+olfactory bulb,UBERON:0002264,Mus_musculus
+ovary,UBERON:0000992,Mus_musculus
+pancreas,UBERON:0001264,Mus_musculus
+placenta,UBERON:0001987,Mus_musculus
+primary oocyte,CL:0000654,Mus_musculus
+primary visual cortex,UBERON:0002436,Mus_musculus
+proximal tubule,UBERON:0004134,Mus_musculus
+quadriceps femoris,UBERON:0001377,Mus_musculus
+retinal neural layer,UBERON:0003902,Mus_musculus
+right kidney,UBERON:0004539,Mus_musculus
+secondary oocyte,CL:0000655,Mus_musculus
+skeletal muscle tissue,UBERON:0001134,Mus_musculus
+spermatid,CL:0000018,Mus_musculus
+spermatocyte,CL:0000017,Mus_musculus
+spleen,UBERON:0002106,Mus_musculus
+stomach,UBERON:0000945,Mus_musculus
+striatum,UBERON:0002435,Mus_musculus
+superior frontal gyrus,UBERON:0002661,Mus_musculus
+testis,UBERON:0000473,Mus_musculus
+thymus,UBERON:0002370,Mus_musculus
+undifferentiated genital tubercle,UBERON:0005876,Mus_musculus
+urinary bladder,UBERON:0001255,Mus_musculus
+uterus,UBERON:0000995,Mus_musculus
+ventricular zone,UBERON:0003053,Mus_musculus
+white adipose tissue,UBERON:0001347,Mus_musculus
+yolk sac,UBERON:0001040,Mus_musculus
+zone of skin,UBERON:0000014,Mus_musculus
+adenohypophysis,UBERON:0002196,Homo_sapiens
+adipose tissue,UBERON:0001013,Homo_sapiens
+adrenal gland,UBERON:0002369,Homo_sapiens
+adrenal tissue,UBERON:0018303,Homo_sapiens
+adult mammalian kidney,UBERON:0000082,Homo_sapiens
+Ammon's horn,UBERON:0001954,Homo_sapiens
+amygdala,UBERON:0001876,Homo_sapiens
+anterior cingulate cortex,UBERON:0009835,Homo_sapiens
+apex of heart,UBERON:0002098,Homo_sapiens
+ascending aorta,UBERON:0001496,Homo_sapiens
+blood,UBERON:0000178,Homo_sapiens
+body of pancreas,UBERON:0001150,Homo_sapiens
+body of stomach,UBERON:0001161,Homo_sapiens
+body of uterus,UBERON:0009853,Homo_sapiens
+bone marrow,UBERON:0002371,Homo_sapiens
+bone marrow cell,CL:0002092,Homo_sapiens
+brain,UBERON:0000955,Homo_sapiens
+Brodmann (1909) area 9,UBERON:0013540,Homo_sapiens
+C1 segment of cervical spinal cord,UBERON:0006469,Homo_sapiens
+calcaneal tendon,UBERON:0003701,Homo_sapiens
+caudate nucleus,UBERON:0001873,Homo_sapiens
+cerebellar cortex,UBERON:0002129,Homo_sapiens
+cerebellar hemisphere,UBERON:0002245,Homo_sapiens
+cerebellum,UBERON:0002037,Homo_sapiens
+cerebral cortex,UBERON:0000956,Homo_sapiens
+colon,UBERON:0001155,Homo_sapiens
+colonic epithelium,UBERON:0000397,Homo_sapiens
+corpus callosum,UBERON:0002336,Homo_sapiens
+cortex of kidney,UBERON:0001225,Homo_sapiens
+cortical plate,UBERON:0005343,Homo_sapiens
+descending thoracic aorta,UBERON:0002345,Homo_sapiens
+dorsolateral prefrontal cortex,UBERON:0009834,Homo_sapiens
+duodenum,UBERON:0002114,Homo_sapiens
+ectocervix,UBERON:0012249,Homo_sapiens
+endocervix,UBERON:0000458,Homo_sapiens
+endometrium,UBERON:0001295,Homo_sapiens
+esophagogastric junction muscularis propria,UBERON:0035841,Homo_sapiens
+esophagus,UBERON:0001043,Homo_sapiens
+esophagus mucosa,UBERON:0002469,Homo_sapiens
+fallopian tube,UBERON:0003889,Homo_sapiens
+frontal cortex,UBERON:0001870,Homo_sapiens
+fundus of stomach,UBERON:0001160,Homo_sapiens
+gall bladder,UBERON:0002110,Homo_sapiens
+ganglionic eminence,UBERON:0004023,Homo_sapiens
+gastrocnemius,UBERON:0001388,Homo_sapiens
+granulocyte,CL:0000094,Homo_sapiens
+heart,UBERON:0000948,Homo_sapiens
+heart left ventricle,UBERON:0002084,Homo_sapiens
+hindlimb stylopod muscle,UBERON:0004252,Homo_sapiens
+hypothalamus,UBERON:0001898,Homo_sapiens
+intestine,UBERON:0000160,Homo_sapiens
+islet of Langerhans,UBERON:0000006,Homo_sapiens
+kidney,UBERON:0002113,Homo_sapiens
+left adrenal gland,UBERON:0001234,Homo_sapiens
+left adrenal gland cortex,UBERON:0035825,Homo_sapiens
+left coronary artery,UBERON:0001626,Homo_sapiens
+left lobe of thyroid gland,UBERON:0001120,Homo_sapiens
+left ovary,UBERON:0002119,Homo_sapiens
+left testis,UBERON:0004533,Homo_sapiens
+left uterine tube,UBERON:0001303,Homo_sapiens
+leukocyte,CL:0000738,Homo_sapiens
+liver,UBERON:0002107,Homo_sapiens
+lower esophagus,UBERON:0013473,Homo_sapiens
+lower esophagus mucosa,UBERON:0035834,Homo_sapiens
+lower esophagus muscularis layer,UBERON:0035833,Homo_sapiens
+lung,UBERON:0002048,Homo_sapiens
+lymph node,UBERON:0000029,Homo_sapiens
+metanephros cortex,UBERON:0010533,Homo_sapiens
+minor salivary gland,UBERON:0001830,Homo_sapiens
+monocyte,CL:0000576,Homo_sapiens
+mucosa of stomach,UBERON:0001199,Homo_sapiens
+mucosa of transverse colon,UBERON:0004991,Homo_sapiens
+multicellular organism,UBERON:0000468,Homo_sapiens
+muscle layer of sigmoid colon,UBERON:0035805,Homo_sapiens
+muscle of leg,UBERON:0001383,Homo_sapiens
+muscle tissue,UBERON:0002385,Homo_sapiens
+myometrium,UBERON:0001296,Homo_sapiens
+nucleus accumbens,UBERON:0001882,Homo_sapiens
+olfactory segment of nasal mucosa,UBERON:0005386,Homo_sapiens
+omental fat pad,UBERON:0010414,Homo_sapiens
+ovary,UBERON:0000992,Homo_sapiens
+pancreas,UBERON:0001264,Homo_sapiens
+pituitary gland,UBERON:0000007,Homo_sapiens
+placenta,UBERON:0001987,Homo_sapiens
+popliteal artery,UBERON:0002250,Homo_sapiens
+prefrontal cortex,UBERON:0000451,Homo_sapiens
+primary visual cortex,UBERON:0002436,Homo_sapiens
+prostate gland,UBERON:0002367,Homo_sapiens
+putamen,UBERON:0001874,Homo_sapiens
+rectum,UBERON:0001052,Homo_sapiens
+right adrenal gland,UBERON:0001233,Homo_sapiens
+right adrenal gland cortex,UBERON:0035827,Homo_sapiens
+right atrium auricular region,UBERON:0006631,Homo_sapiens
+right coronary artery,UBERON:0001625,Homo_sapiens
+right frontal lobe,UBERON:0002810,Homo_sapiens
+right hemisphere of cerebellum,UBERON:0014890,Homo_sapiens
+right lobe of liver,UBERON:0001114,Homo_sapiens
+right lobe of thyroid gland,UBERON:0001119,Homo_sapiens
+right lung,UBERON:0002167,Homo_sapiens
+right ovary,UBERON:0002118,Homo_sapiens
+right testis,UBERON:0004534,Homo_sapiens
+right uterine tube,UBERON:0001302,Homo_sapiens
+saliva-secreting gland,UBERON:0001044,Homo_sapiens
+skeletal muscle tissue,UBERON:0001134,Homo_sapiens
+skin of abdomen,UBERON:0001416,Homo_sapiens
+skin of leg,UBERON:0001511,Homo_sapiens
+small intestine,UBERON:0002108,Homo_sapiens
+small intestine Peyer's patch,UBERON:0003454,Homo_sapiens
+smooth muscle tissue,UBERON:0001135,Homo_sapiens
+spleen,UBERON:0002106,Homo_sapiens
+stomach,UBERON:0000945,Homo_sapiens
+stromal cell of endometrium,CL:0002255,Homo_sapiens
+subcutaneous adipose tissue,UBERON:0002190,Homo_sapiens
+substantia nigra,UBERON:0002038,Homo_sapiens
+superior frontal gyrus,UBERON:0002661,Homo_sapiens
+sural nerve,UBERON:0015488,Homo_sapiens
+temporal lobe,UBERON:0001871,Homo_sapiens
+testis,UBERON:0000473,Homo_sapiens
+thoracic aorta,UBERON:0001515,Homo_sapiens
+thoracic mammary gland,UBERON:0005200,Homo_sapiens
+thyroid gland,UBERON:0002046,Homo_sapiens
+tibial artery,UBERON:0007610,Homo_sapiens
+tibial nerve,UBERON:0001323,Homo_sapiens
+tonsil,UBERON:0002372,Homo_sapiens
+transverse colon,UBERON:0001157,Homo_sapiens
+upper lobe of left lung,UBERON:0008952,Homo_sapiens
+urinary bladder,UBERON:0001255,Homo_sapiens
+uterine cervix,UBERON:0000002,Homo_sapiens
+vagina,UBERON:0000996,Homo_sapiens
+ventricular zone,UBERON:0003053,Homo_sapiens
+vermiform appendix,UBERON:0001154,Homo_sapiens
+zone of skin,UBERON:0000014,Homo_sapiens
+adult organism,UBERON:0007023,Drosophila_melanogaster
+arthropod fat body,UBERON:0003917,Drosophila_melanogaster
+brain,UBERON:0000955,Drosophila_melanogaster
+central nervous system,UBERON:0001017,Drosophila_melanogaster
+digestive system element,UBERON:0013765,Drosophila_melanogaster
+embryo,UBERON:0000922,Drosophila_melanogaster
+imaginal disc,UBERON:0000939,Drosophila_melanogaster
+insect adult head,UBERON:6003007,Drosophila_melanogaster
+larva,UBERON:0002548,Drosophila_melanogaster
+male reproductive gland,UBERON:0005399,Drosophila_melanogaster
+Malpighian tubule,UBERON:0001054,Drosophila_melanogaster
+midgut,UBERON:0001045,Drosophila_melanogaster
+ovary,UBERON:0000992,Drosophila_melanogaster
+prepupa,UBERON:0003142,Drosophila_melanogaster
+pupa,UBERON:0003143,Drosophila_melanogaster
+saliva-secreting gland,UBERON:0001044,Drosophila_melanogaster
+seminal fluid secreting gland,UBERON:0006868,Drosophila_melanogaster
+testis,UBERON:0000473,Drosophila_melanogaster
+adult organism,UBERON:0007023,Caenorhabditis_elegans
+embryo,UBERON:0000922,Caenorhabditis_elegans
+larva,UBERON:0002548,Caenorhabditis_elegans
+multicellular organism,UBERON:0000468,Caenorhabditis_elegans
+pharyngeal muscle cell (C elegans),WBbt:0005451,Caenorhabditis_elegans
