@@ -47,83 +47,91 @@ setMethod("getGEx", signature(object = "CoSIAn"), function(object) {
     
     if (any(map_species == "m_musculus_ensembl_id")) {
       print("opening mouse")
-      load("data/EH_Mm.RData",envir=.GlobalEnv)
-      Experimental_Hub_File <- Mouse
-      Mouse <<- NULL
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Mus_musculus")
-      m_ensembl_id<- id_dataframe$m_musculus
-      gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% m_ensembl_id)
-      GEx_data <- rbind(GEx_data, gene_specific_data)
-      GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
-      gc()
-      print("closing mouse")
+      for (i in 1:4){
+        file_name <- paste0("data/mouse/EH_Mm_", i, ".RData")
+        load(file_name,envir=.GlobalEnv)
+        bgee_species <- dplyr::filter(Mouse, Species == "Mus_musculus")
+        mm_ensembl_id<- id_dataframe$m_musculus
+        gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% mm_ensembl_id)
+        GEx_data <- rbind(GEx_data, gene_specific_data)
+        GEx_data<-as.data.frame(GEx_data)
+        Mouse <<- NULL
+        gc()
+      }
+      
+      
+      # load("data/EH_Mm.RData",envir=.GlobalEnv)
+      # bgee_species <- dplyr::filter(Mouse, Species == "Mus_musculus")
+      # m_ensembl_id<- id_dataframe$m_musculus
+      # gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% m_ensembl_id)
+      # GEx_data <- rbind(GEx_data, gene_specific_data)
+      # GEx_data<-as.data.frame(GEx_data)
+      # Mouse <<- NULL
+      # gc()
+      # print("closing mouse")
     }
     else if (any(map_species == "r_norvegicus_ensembl_id")) {
       load("data/EH_Rn.RData",envir=.GlobalEnv)
       Experimental_Hub_File <- Rat
-      Rat <<- NULL
-      gc()
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Rattus_norvegicus")
+      bgee_species <- dplyr::filter(Rat, Species == "Rattus_norvegicus")
       r_ensembl_id<- id_dataframe$r_norvegicus
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% r_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
+      Rat <<- NULL
       gc()
     }
     else if (any(map_species == "d_rerio_ensembl_id")) {
       load("data/EH_Dr.RData",envir=.GlobalEnv)
-      Experimental_Hub_File <- Zebrafish
-      Zebrafish <<- NULL
-      gc()
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Danio_rerio")
+      bgee_species <- dplyr::filter(Zebrafish, Species == "Danio_rerio")
       dr_ensembl_id<- id_dataframe$d_rerio
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% dr_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
+      Zebrafish <<- NULL
       gc()
     }
     else if (any(map_species == "h_sapiens_ensembl_id")) {
       print("opening human")
-      load("data/EH_Hs.RData",envir=.GlobalEnv)
-      Experimental_Hub_File <- Human
-      Human <<- NULL
-      gc()
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Homo_sapiens")
-      hs_ensembl_id<- id_dataframe$h_sapiens
-      gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% hs_ensembl_id)
-      GEx_data <- rbind(GEx_data, gene_specific_data)
-      GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
-      gc()
-      print("closing human")
+      for (i in 1:20){
+        file_name <- paste0("data/human/EH_Hs_", i, ".RData")
+        load(file_name,envir=.GlobalEnv)
+        bgee_species <- dplyr::filter(Human, Species == "Homo_sapiens")
+        hs_ensembl_id<- id_dataframe$h_sapiens
+        gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% hs_ensembl_id)
+        GEx_data <- rbind(GEx_data, gene_specific_data)
+        GEx_data<-as.data.frame(GEx_data)
+        Human <<- NULL
+        gc()
+      }
+      # load("data/EH_Hs.RData",envir=.GlobalEnv)
+      # bgee_species <- dplyr::filter(Human, Species == "Homo_sapiens")
+      # hs_ensembl_id<- id_dataframe$h_sapiens
+      # gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% hs_ensembl_id)
+      # GEx_data <- rbind(GEx_data, gene_specific_data)
+      # GEx_data<-as.data.frame(GEx_data)
+      # Human <<- NULL
+      # gc()
+      # print("closing human")
     }
     else if (any(map_species == "c_elegans_ensembl_id")) {
       load("data/EH_Ce.RData",envir=.GlobalEnv)
-      Experimental_Hub_File <- Nematode
-      Nematode <<- NULL
-      gc()
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Caenorhabditis_elegans")
+      bgee_species <- dplyr::filter(Nematode, Species == "Caenorhabditis_elegans")
       c_ensembl_id<- id_dataframe$c_elegans
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% c_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
+      Nematode <<- NULL
       gc()
     }
     else if (any(map_species == "d_melanogaster_ensembl_id")) {
       load("data/EH_Dm.RData",envir=.GlobalEnv)
-      Experimental_Hub_File <- Fly
-      Fly <<- NULL
-      gc()
-      bgee_species <- dplyr::filter(Experimental_Hub_File, Species == "Drosophila_melanogaster")
+      bgee_species <- dplyr::filter(Fly, Species == "Drosophila_melanogaster")
       dm_ensembl_id<- id_dataframe$d_melanogaster
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% dm_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Experimental_Hub_File <<- NULL
+      Fly <<- NULL
       gc()
     }
     else{

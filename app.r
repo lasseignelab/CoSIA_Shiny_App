@@ -123,11 +123,15 @@ server <- function(input,output,session){
       output$conversion_table <- renderDataTable({global_cosia@converted_id})
       for_input <- global_cosia@converted_id
       print(for_input)
-      for_input <- for_input[,grepl("ensembl_id",names(for_input))]
+      for_input <- data.frame(for_input[,grepl("ensembl_id",names(for_input))])
       print(for_input)
+      print(dim(for_input))
+      if(dim(for_input)[2]!=1){
       for_input <- c(for_input,sep="/")
+      }
       print(for_input)
       for_input <- do.call(paste,for_input)
+      print("final")
       print(for_input)
       updateSelect2Input(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
     })
