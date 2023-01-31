@@ -149,8 +149,9 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     return_filtered_DS_Gene_data<- function(map_species){
       GEx_data<- data.frame(matrix(ncol = 7, nrow = 0))
       colnames(GEx_data) <- c('Anatomical_entity_name', 'Ensembl_ID', 'Sample_size','VST','Experiment_ID','Anatomical_entity_ID','Species')
-      
-      if (any(map_species == "m_musculus_ensembl_id")) {
+      print("id test")
+      print(id)
+      if (any(map_species == "Mus_musculus")) {
         print("opening mouse")
         for (i in 1:4){
           file_name <- paste0("data/mouse/EH_Mm_", i, ".RData")
@@ -175,7 +176,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         # gc()
         # print("closing mouse")
       }
-      else if (any(map_species == "r_norvegicus_ensembl_id")) {
+      else if (any(map_species == "Rattus_norvegicus")) {
         load("data/EH_Rn.RData",envir=.GlobalEnv)
         Experimental_Hub_File <- Rat
         bgee_species <- dplyr::filter(Rat, Species == "Rattus_norvegicus")
@@ -186,7 +187,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         Rat <<- NULL
         gc()
       }
-      else if (any(map_species == "d_rerio_ensembl_id")) {
+      else if (any(map_species == "Danio_rerio")) {
         load("data/EH_Dr.RData",envir=.GlobalEnv)
         bgee_species <- dplyr::filter(Zebrafish, Species == "Danio_rerio")
         dr_ensembl_id<- id
@@ -196,7 +197,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         Zebrafish <<- NULL
         gc()
       }
-      else if (any(map_species == "h_sapiens_ensembl_id")) {
+      else if (any(map_species == "Homo_sapiens")) {
         print("opening human")
         for (i in 1:20){
           file_name <- paste0("data/human/EH_Hs_", i, ".RData")
@@ -219,7 +220,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         # gc()
         # print("closing human")
       }
-      else if (any(map_species == "c_elegans_ensembl_id")) {
+      else if (any(map_species == "Caenorhabditis_elegans")) {
         load("data/EH_Ce.RData",envir=.GlobalEnv)
         bgee_species <- dplyr::filter(Nematode, Species == "Caenorhabditis_elegans")
         c_ensembl_id<- id
@@ -229,7 +230,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         Nematode <<- NULL
         gc()
       }
-      else if (any(map_species == "d_melanogaster_ensembl_id")) {
+      else if (any(map_species == "Drosophila_melanogaster")) {
         load("data/EH_Dm.RData",envir=.GlobalEnv)
         bgee_species <- dplyr::filter(Fly, Species == "Drosophila_melanogaster")
         dm_ensembl_id<- id
@@ -246,12 +247,16 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       return(GEx_data)
     }
     id<-as.vector(t(id_dataframe))
+    print("id")
+    print(as.character(id))
     
     filter_species <- return_filtered_DS_Gene_data(map_species)
     filter_tissue <- dplyr::filter(filter_species,Anatomical_entity_name %in% map_tissues)
     
     # filter_gene <- dplyr::filter(filter_tissue,Ensembl_ID %in% id)
-    filter_gene$Scaled_Median_VST <- as.numeric(filter_tissue$Scaled_Median_VST)
+    filter_gene <- filter_tissue
+    print(head(filter_gene))
+    filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
     filter_gex<- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
     filter_gex_D<- filter_gex%>% tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
     filter_gex_D <- filter_gex_D %>% remove_rownames %>% tibble::column_to_rownames(var="Anatomical_entity_name")
@@ -263,6 +268,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gex_S<- filter_gex%>% tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
     filter_gex_S <- filter_gex_S %>% remove_rownames %>% column_to_rownames(var="Ensembl_ID")
     filter_gex_S<- data.matrix(filter_gex_S, )
+    print(head(filter_gex_S))
     ENTROPY_SPECIFITY_G<-data.frame(DS_function("Specificity",filter_gex_S)) # across tissues
     colnames(ENTROPY_SPECIFITY_G)[which(names(ENTROPY_SPECIFITY_G) == "DS_function..Specificity...filter_gex_S.")] <- "Specificity"
     
