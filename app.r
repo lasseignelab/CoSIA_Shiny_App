@@ -224,7 +224,11 @@ server <- function(input,output,session){
   observeEvent(input$ds_go,{
     global_cosia@metric_type<<-input$ds_metric
     global_cosia@map_tissues <- input$ds_tissue
+    print("test1")
+    print(input$ds_species)
     global_cosia@map_species <- input$ds_species
+    print(global_cosia@map_species)
+    print("test2")
     global_cosia <- getGExMetrics(global_cosia)
     output$ds_plot <- renderPlot({
       plotDSGEx(global_cosia)
