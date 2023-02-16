@@ -58,26 +58,27 @@ ui <- fluidPage(
               actionButton("plot_go", "Plot")
     ),#----
     wellPanel(HTML("<h4>Plot DS</h4>"),
-              checkboxGroupInput("ds_species", "species",choices=species_list),
-              checkboxGroupInput("ds_tissue","tissues",choices="Select Species First"),
-              selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue", "DS_Tissue_all", "DS_Gene_all")),
+              checkboxGroupInput("ds_tissue","tissues",choices="run conversion first"),
+              selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue")),
               actionButton("ds_go", "Plot")
               
     ),
     wellPanel(HTML("<h4>Plot CV</h4>"),
-              
-    )        
+              checkboxGroupInput("cv_tissue", "tissues", choices="run conversion first"),
+              selectInput("cv_metric", "metric", choices= c("CV_Tissue", "CV_Species")),
+              actionButton("cv_go", "Plot")
+    )
   ),
   #Main Panel----
   mainPanel(
     dataTableOutput("conversion_table"),
     uiOutput("plots"),
-    plotOutput("ds_plot")
+    plotOutput("metric_plot")
   )#----
 )
 server <- function(input,output,session){
   source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
-
+  
   global_cosia <- CoSIAn(
     gene_set = "",
     i_species="",
@@ -102,7 +103,6 @@ server <- function(input,output,session){
   })
   
   observeEvent(input$conversion_go,{
-    
     gene_ids <- unlist(strsplit(input$gene_ids,split = "\n"))
     gene_input_species <- input$gene_input_species
     gene_input_id_type <- input$gene_input_id_type
@@ -127,7 +127,7 @@ server <- function(input,output,session){
       print(for_input)
       print(dim(for_input))
       if(dim(for_input)[2]!=1){
-      for_input <- c(for_input,sep="/")
+        for_input <- c(for_input,sep="/")
       }
       print(for_input)
       for_input <- do.call(paste,for_input)
@@ -135,6 +135,10 @@ server <- function(input,output,session){
       print(for_input)
       updateSelect2Input(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
     })
+    tib <- getTissues(conversion_output_species)
+    vec <- pull(tib,Common_Anatomical_Entity_Name)
+    updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
+    updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
   })
   
   observeEvent(input$plot_species,{
@@ -214,27 +218,32 @@ server <- function(input,output,session){
     })
   })
   
-  observeEvent(input$ds_species,{
-    tib <- getTissues(input$ds_species)
-    vec <- pull(tib,Common_Anatomical_Entity_Name)
-    updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(input$ds_species, collapse=", ")))
-    
-  })
-  
   observeEvent(input$ds_go,{
     global_cosia@metric_type<<-input$ds_metric
     global_cosia@map_tissues <- input$ds_tissue
-    print("test1")
-    print(input$ds_species)
-    global_cosia@map_species <- input$ds_species
+    global_cosia@map_species <<- global_cosia@o_species
+    
     print(global_cosia@map_species)
     print("test2")
     global_cosia <- getGExMetrics(global_cosia)
-    output$ds_plot <- renderPlot({
+    output$metric_plot <- renderPlot({
       plotDSGEx(global_cosia)
     })
-    
+    print("done")
   })
+  
+  observeEvent(input$cv_go,{
+    global_cosia@metric_type<<-input$cv_metric
+    global_cosia@map_tissues <<- input$cv_tissue
+    global_cosia@map_species <<- global_cosia@o_species
+    print("test")
+    global_cosia <- getGExMetrics(global_cosia)
+    print(head(global_cosia@metric))
+    output$metric_plot <- renderPlot({
+      plotCVGEx(global_cosia)
+    })
+  print("done")
+    })
 }
 shinyApp(ui=ui,server=server)
 
