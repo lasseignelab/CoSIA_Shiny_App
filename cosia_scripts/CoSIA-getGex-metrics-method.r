@@ -182,7 +182,6 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   
   # DS_Gene : output genes restricted by mapped tissues and gene set
   DS_Gene <- function(map_species, map_tissues) {
-    print(map_species)
     load("data/EH_Data.RData")
     filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
     Experimental_Hub_File <- NULL

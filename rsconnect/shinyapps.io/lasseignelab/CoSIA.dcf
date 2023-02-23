@@ -5,9 +5,9 @@ account: lasseignelab
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7830892
-bundleId: 6846918
+bundleId: 6854868
 url: https://lasseignelab.shinyapps.io/CoSIA/
-when: 1676410771.66599
-lastSyncTime: 1676410771.66601
+when: 1676572088.41875
+lastSyncTime: 1676572088.41877
 asMultiple: FALSE
 asStatic: FALSE
