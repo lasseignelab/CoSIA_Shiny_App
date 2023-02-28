@@ -1,4 +1,3 @@
-options(rsconnect.max.bundle.size= 5 * 10^9)
 #Setup----
 library(shiny)
 library(shinyalert)
