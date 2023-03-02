@@ -23,57 +23,62 @@ homolog_database_list <- c("HomoloGene",
                            "NCBIOrthoAnnotationPipe")
 
 #Start UI----
-ui <- fluidPage(
-  sidebarPanel(
-    #Gene Input----
-    wellPanel(HTML("<h4>Gene Input</h4>"),
-              textAreaInput("gene_ids","Paste IDs"),
-              fileInput("gene_file", "Upload CSV File",
-                        multiple = FALSE,
-                        accept = ".csv"),
-              selectInput("gene_input_species", "Input Species",
-                          choices=species_list),
-              selectInput("gene_input_id_type", "Input ID type",
-                          choices=id_type_list)
-    ),
-    #ID Conversion----
-    wellPanel(HTML("<h4>ID Conversion</h4>"),
-              checkboxGroupInput("conversion_output_species", "Output Species",
-                                 choices=species_list),
-              checkboxGroupInput("conversion_output_id_types", "Output ID types",
-                                 choices=id_type_list),
-              selectInput("conversion_tool", "Tool",
-                          choices=tool_list),
-              selectInput("conversion_ortholog_database","Otholog Database",
-                          choices=homolog_database_list),
-              actionButton("conversion_go","Convert IDs")
-    ),
-    #Plot Expression----
-    wellPanel(HTML("<h4>Plot Expression</h4>"),
-              select2Input("plot_gene", "gene",choices=NULL),
-              checkboxGroupInput("plot_species", "species",choices=species_list),
-              checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
-              checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
-              actionButton("plot_go", "Plot")
-    ),#----
-    wellPanel(HTML("<h4>Plot DS</h4>"),
-              checkboxGroupInput("ds_tissue","tissues",choices="run conversion first"),
-              selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue")),
-              actionButton("ds_go", "Plot")
-              
-    ),
-    wellPanel(HTML("<h4>Plot CV</h4>"),
-              checkboxGroupInput("cv_tissue", "tissues", choices="run conversion first"),
-              selectInput("cv_metric", "metric", choices= c("CV_Tissue", "CV_Species")),
-              actionButton("cv_go", "Plot")
-    )
-  ),
-  #Main Panel----
-  mainPanel(
-    dataTableOutput("conversion_table"),
-    uiOutput("plots"),
-    plotOutput("metric_plot")
-  )#----
+ui <- navbarPage("",
+                 tabPanel("CoSIA",
+                          sidebarPanel(
+                            #Gene Input----
+                            wellPanel(HTML("<h4>Gene Input</h4>"),
+                                      actionButton("conversion_instructions", "Instructions"),
+                                      textAreaInput("gene_ids","Paste IDs"),
+                                      fileInput("gene_file", "Upload CSV File",
+                                                multiple = FALSE,
+                                                accept = ".csv"),
+                                      selectInput("gene_input_species", "Input Species",
+                                                  choices=species_list),
+                                      selectInput("gene_input_id_type", "Input ID type",
+                                                  choices=id_type_list)
+                            ),
+                            #ID Conversion----
+                            wellPanel(HTML("<h4>ID Conversion</h4>"),
+                                      checkboxGroupInput("conversion_output_species", "Output Species",
+                                                         choices=species_list),
+                                      checkboxGroupInput("conversion_output_id_types", "Output ID types",
+                                                         choices=id_type_list),
+                                      selectInput("conversion_tool", "Tool",
+                                                  choices=tool_list),
+                                      selectInput("conversion_ortholog_database","Otholog Database",
+                                                  choices=homolog_database_list),
+                                      actionButton("conversion_go","Convert IDs")
+                            ),
+                            #Plot Expression----
+                            wellPanel(HTML("<h4>Plot Expression</h4>"),
+                                      actionButton("plot_instructions","Instructions"),
+                                      select2Input("plot_gene", "gene",choices=NULL),
+                                      checkboxGroupInput("plot_species", "species",choices=species_list),
+                                      checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
+                                      checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
+                                      actionButton("plot_go", "Plot")
+                            ),#----
+                            wellPanel(HTML("<h4>Plot DS</h4>"),
+                                      checkboxGroupInput("ds_tissue","tissues",choices="run conversion first"),
+                                      selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue")),
+                                      actionButton("ds_go", "Plot")
+                                      
+                            ),
+                            wellPanel(HTML("<h4>Plot CV</h4>"),
+                                      checkboxGroupInput("cv_tissue", "tissues", choices="run conversion first"),
+                                      selectInput("cv_metric", "metric", choices= c("CV_Tissue", "CV_Species")),
+                                      actionButton("cv_go", "Plot")
+                            ),
+                            #Main Panel----
+                            mainPanel(
+                              dataTableOutput("conversion_table"),
+                              uiOutput("plots"),
+                              plotOutput("metric_plot")
+                            )#----
+                          )
+                 ),
+                 tabPanel("About",)
 )
 server <- function(input,output,session){
   source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
@@ -89,6 +94,47 @@ server <- function(input,output,session){
     map_species = "",
     metric_type=""
   )
+  observeEvent(input$conversion_instructions , {
+    shinyalert::shinyalert(  title="Conversion Instructions",
+                             text='
+    <p style="text-align:left">
+    1) Paste IDs in this format:<br>
+      ENSG00000172315<br>
+      ENSG00000087460<br>
+      ENSG00000049759<br>
+      ENSG00000088256<br>
+      ENSG00000102144<br>
+      ENSG00000072501<br>
+      ENSG00000148459<br>
+      ENSG00000198931<br>
+      ENSG00000081479<br>
+      ENSG00000157483<br>
+      ENSG00000113924<br>
+      ENSG00000171863<br>
+      ENSG00000025796<br>
+      ENSG00000011201<br>
+      Or upload a csv file with 1 column.<br>
+      <br>
+      2) Select the species and ID type of your genes.<br>
+      <br>
+      3) Select any number of species and ID types to convert to. You must select as least 1 for each.<br>
+      <br>
+      4) Select between annotationDBI and biomaRt. We recommend annotationDBI because it is faster. <br>
+      <br>
+      5) Select ortholog database. If input species is the same as output species, this step does not matter.
+                      </p>',
+                             html=TRUE)
+  })
+  observeEvent(input$plot_instructions ,{
+    shinyalert::shinyalert(  title="Conversion Instructions",
+                             text='
+    <p style="text-align:left">
+    This section of CoSIA plots the expression of genes chosen in the previous step. 
+    Conversion must be done before plotting expression. 
+    
+                      </p>',
+                             html=TRUE)
+  })
   observeEvent(input$gene_file,{
     x <- input$gene_file
     x <- read.csv(x$datapath)
@@ -257,19 +303,19 @@ server <- function(input,output,session){
     if(valid_input){try({
       print("running ds")
       withProgress(message="Plotting Metric", value=0,{
-      global_cosia@metric_type<<-input$ds_metric
-      global_cosia@map_tissues <<- input$ds_tissue
-      global_cosia@map_species <<- global_cosia@o_species
-      print("test")
-      incProgress(1/2, detail="Fetching Metric Data")
-      global_cosia <- getGExMetrics(global_cosia)
-      print(head(global_cosia@metric))
-      incProgress(2/2, detail="Plotting")
-      output$metric_plot <- renderPlot({
-        plotDSGEx(global_cosia)
-      
+        global_cosia@metric_type<<-input$ds_metric
+        global_cosia@map_tissues <<- input$ds_tissue
+        global_cosia@map_species <<- global_cosia@o_species
+        print("test")
+        incProgress(1/2, detail="Fetching Metric Data")
+        global_cosia <- getGExMetrics(global_cosia)
+        print(head(global_cosia@metric))
+        incProgress(2/2, detail="Plotting")
+        output$metric_plot <- renderPlot({
+          plotDSGEx(global_cosia)
+          
         })
-      print("done")
+        print("done")
       })
     })
     }
@@ -292,20 +338,20 @@ server <- function(input,output,session){
     if(valid_input){
       try({
         withProgress(message="Plotting Metric", value=0,{
-        global_cosia@metric_type<<-input$cv_metric
-        global_cosia@map_tissues <<- input$cv_tissue
-        global_cosia@map_species <<- global_cosia@o_species
-        print("test")
-        incProgress(1/2, detail="Fetching Metric Data")
-        global_cosia <- getGExMetrics(global_cosia)
-        print(head(global_cosia@metric))
-        incProgress(2/2, detail="Plotting")
-        output$metric_plot <- renderPlot({
-          plotCVGEx(global_cosia)
+          global_cosia@metric_type<<-input$cv_metric
+          global_cosia@map_tissues <<- input$cv_tissue
+          global_cosia@map_species <<- global_cosia@o_species
+          print("test")
+          incProgress(1/2, detail="Fetching Metric Data")
+          global_cosia <- getGExMetrics(global_cosia)
+          print(head(global_cosia@metric))
+          incProgress(2/2, detail="Plotting")
+          output$metric_plot <- renderPlot({
+            plotCVGEx(global_cosia)
+          })
+          print("done")
         })
-        print("done")
       })
-        })
     }
   })
   
