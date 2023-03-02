@@ -23,60 +23,62 @@ homolog_database_list <- c("HomoloGene",
                            "NCBIOrthoAnnotationPipe")
 
 #Start UI----
-ui <- fluidPage(
-  
-  sidebarPanel(
-    #Gene Input----
-    wellPanel(HTML("<h4>Gene Input</h4>"),
-              actionButton("conversion_instructions", "Instructions"),
-              textAreaInput("gene_ids","Paste IDs"),
-              fileInput("gene_file", "Upload CSV File",
-                        multiple = FALSE,
-                        accept = ".csv"),
-              selectInput("gene_input_species", "Input Species",
-                          choices=species_list),
-              selectInput("gene_input_id_type", "Input ID type",
-                          choices=id_type_list)
-    ),
-    #ID Conversion----
-    wellPanel(HTML("<h4>ID Conversion</h4>"),
-              checkboxGroupInput("conversion_output_species", "Output Species",
-                                 choices=species_list),
-              checkboxGroupInput("conversion_output_id_types", "Output ID types",
-                                 choices=id_type_list),
-              selectInput("conversion_tool", "Tool",
-                          choices=tool_list),
-              selectInput("conversion_ortholog_database","Otholog Database",
-                          choices=homolog_database_list),
-              actionButton("conversion_go","Convert IDs")
-    ),
-    #Plot Expression----
-    wellPanel(HTML("<h4>Plot Expression</h4>"),
-              actionButton("plot_instructions","Instructions"),
-              select2Input("plot_gene", "gene",choices=NULL),
-              checkboxGroupInput("plot_species", "species",choices=species_list),
-              checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
-              checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
-              actionButton("plot_go", "Plot")
-    ),#----
-    wellPanel(HTML("<h4>Plot DS</h4>"),
-              checkboxGroupInput("ds_tissue","tissues",choices="run conversion first"),
-              selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue")),
-              actionButton("ds_go", "Plot")
-              
-    ),
-    wellPanel(HTML("<h4>Plot CV</h4>"),
-              checkboxGroupInput("cv_tissue", "tissues", choices="run conversion first"),
-              selectInput("cv_metric", "metric", choices= c("CV_Tissue", "CV_Species")),
-              actionButton("cv_go", "Plot")
-    ),
-    #Main Panel----
-    mainPanel(
-      dataTableOutput("conversion_table"),
-      uiOutput("plots"),
-      plotOutput("metric_plot")
-    )#----
-  )
+ui <- navbarPage("",
+                 tabPanel("CoSIA",
+                          sidebarPanel(
+                            #Gene Input----
+                            wellPanel(HTML("<h4>Gene Input</h4>"),
+                                      actionButton("conversion_instructions", "Instructions"),
+                                      textAreaInput("gene_ids","Paste IDs"),
+                                      fileInput("gene_file", "Upload CSV File",
+                                                multiple = FALSE,
+                                                accept = ".csv"),
+                                      selectInput("gene_input_species", "Input Species",
+                                                  choices=species_list),
+                                      selectInput("gene_input_id_type", "Input ID type",
+                                                  choices=id_type_list)
+                            ),
+                            #ID Conversion----
+                            wellPanel(HTML("<h4>ID Conversion</h4>"),
+                                      checkboxGroupInput("conversion_output_species", "Output Species",
+                                                         choices=species_list),
+                                      checkboxGroupInput("conversion_output_id_types", "Output ID types",
+                                                         choices=id_type_list),
+                                      selectInput("conversion_tool", "Tool",
+                                                  choices=tool_list),
+                                      selectInput("conversion_ortholog_database","Otholog Database",
+                                                  choices=homolog_database_list),
+                                      actionButton("conversion_go","Convert IDs")
+                            ),
+                            #Plot Expression----
+                            wellPanel(HTML("<h4>Plot Expression</h4>"),
+                                      actionButton("plot_instructions","Instructions"),
+                                      select2Input("plot_gene", "gene",choices=NULL),
+                                      checkboxGroupInput("plot_species", "species",choices=species_list),
+                                      checkboxGroupInput("plot_tissue","tissues",choices="Select Species First"),
+                                      checkboxInput("plot_by", label=HTML("<b>Plot by Tissue</b>")),
+                                      actionButton("plot_go", "Plot")
+                            ),#----
+                            wellPanel(HTML("<h4>Plot DS</h4>"),
+                                      checkboxGroupInput("ds_tissue","tissues",choices="run conversion first"),
+                                      selectInput("ds_metric", "metric", choices=c("DS_Gene","DS_Tissue")),
+                                      actionButton("ds_go", "Plot")
+                                      
+                            ),
+                            wellPanel(HTML("<h4>Plot CV</h4>"),
+                                      checkboxGroupInput("cv_tissue", "tissues", choices="run conversion first"),
+                                      selectInput("cv_metric", "metric", choices= c("CV_Tissue", "CV_Species")),
+                                      actionButton("cv_go", "Plot")
+                            ),
+                            #Main Panel----
+                            mainPanel(
+                              dataTableOutput("conversion_table"),
+                              uiOutput("plots"),
+                              plotOutput("metric_plot")
+                            )#----
+                          )
+                 ),
+                 tabPanel("About",)
 )
 server <- function(input,output,session){
   source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
