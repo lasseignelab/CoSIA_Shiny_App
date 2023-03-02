@@ -19,8 +19,7 @@ id_type_list <- c("Ensembl_id",
                   "Symbol")
 tool_list <- c("annotationDBI",
                "biomaRt")
-homolog_database_list <- c("None",
-                           "HomoloGene",
+homolog_database_list <- c("HomoloGene",
                            "NCBIOrthoAnnotationPipe")
 
 #Start UI----
@@ -154,12 +153,11 @@ server <- function(input,output,session){
   
   observeEvent(input$plot_go,{
     valid_input <- TRUE
-    if(is.null(plot$tissue)|is.null(plot$species)|is.null(plot$gene)){
+    if(is.null(input$plot_tissue)|is.null(input$plot_species)|is.null(input$plot_gene)){
       valid_input <- FALSE
       shinyalert::shinyalert("Error", "Fill out All Fields", type="error")
       
     }
-    
     if(valid_input){
       try({
         withProgress(message="Plotting Expression", value=0,{
