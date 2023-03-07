@@ -48,12 +48,12 @@ setMethod("getGEx", signature(object = "CoSIAn"), function(object) {
     if (any(map_species == "m_musculus_ensembl_id")) {
       print("opening mouse")
       load("data/EH_Mm.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Mouse, Species == "Mus_musculus")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Mouse, Species == "Mus_musculus")
       mm_ensembl_id<- id_dataframe$m_musculus
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% mm_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Mouse <<- NULL
+      GEx_Bulk_Bgee_Mouse <<- NULL
       gc()
       
       
@@ -70,54 +70,54 @@ setMethod("getGEx", signature(object = "CoSIAn"), function(object) {
     }
     else if (any(map_species == "r_norvegicus_ensembl_id")) {
       load("data/EH_Rn.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Rat, Species == "Rattus_norvegicus")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Rat, Species == "Rattus_norvegicus")
       r_ensembl_id<- id_dataframe$r_norvegicus
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% r_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Rat <<- NULL
+      GEx_Bulk_Bgee_Rat <<- NULL
       gc()
     }
     else if (any(map_species == "d_rerio_ensembl_id")) {
       load("data/EH_Dr.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Zebrafish, Species == "Danio_rerio")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Zebrafish, Species == "Danio_rerio")
       dr_ensembl_id<- id_dataframe$d_rerio
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% dr_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Zebrafish <<- NULL
+      GEx_Bulk_Bgee_Zebrafish <<- NULL
       gc()
     }
     else if (any(map_species == "h_sapiens_ensembl_id")) {
       print("opening human")
       load("data/EH_Hs.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Human, Species == "Homo_sapiens")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Human, Species == "Homo_sapiens")
       hs_ensembl_id<- id_dataframe$h_sapiens
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% hs_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Human <<- NULL
+      GEx_Bulk_Bgee_Human <<- NULL
       gc()
       print("closing human")
     }
     else if (any(map_species == "c_elegans_ensembl_id")) {
       load("data/EH_Ce.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Nematode, Species == "Caenorhabditis_elegans")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Nematode, Species == "Caenorhabditis_elegans")
       c_ensembl_id<- id_dataframe$c_elegans
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% c_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Nematode <<- NULL
+      GEx_Bulk_Bgee_Nematode <<- NULL
       gc()
     }
     else if (any(map_species == "d_melanogaster_ensembl_id")) {
       load("data/EH_Dm.RData",envir=.GlobalEnv)
-      bgee_species <- dplyr::filter(Fly, Species == "Drosophila_melanogaster")
+      bgee_species <- dplyr::filter(GEx_Bulk_Bgee_Fly, Species == "Drosophila_melanogaster")
       dm_ensembl_id<- id_dataframe$d_melanogaster
       gene_specific_data <- dplyr::filter(bgee_species, Ensembl_ID %in% dm_ensembl_id)
       GEx_data <- rbind(GEx_data, gene_specific_data)
       GEx_data<-as.data.frame(GEx_data)
-      Fly <<- NULL
+      GEx_Bulk_Bgee_Fly <<- NULL
       gc()
     }
     else{
