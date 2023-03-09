@@ -68,7 +68,7 @@ setMethod("plotSpeciesGEx", signature(object = "CoSIAn"), function(object, singl
   fig <- fig %>%
     plotly::add_trace(type = "violin", spanmode = "hard", showlegend = FALSE)
   fig <- fig %>%
-    plotly::layout(xaxis = list(title = "Species", size = 2), yaxis = list(title = "VST (Variance Stabilized Transformation of Read Counts)",
+    plotly::layout(xaxis = list(title = "Species", size = 2), yaxis = list(title = "VST of Read Counts",
                                                                            zeroline = FALSE), title = stringr::str_wrap(paste("Gene Expression of the gene", single_gene, "in", single_tissue,
                                                                                                                               "across species", sep = " ")), showlegend = FALSE)
   return(fig)
@@ -155,7 +155,7 @@ setMethod("plotTissueGEx", signature(object = "CoSIAn"), function(object, single
   fig <- fig %>%
     plotly::add_trace(type = "violin", spanmode = "hard", showlegend = FALSE)
   fig <- fig %>%
-    plotly::layout(xaxis = list(title = "Anatomical Entity Name", size = 2), yaxis = list(title = "VST (Variance Stabilized Transformation of Read Counts)",
+    plotly::layout(xaxis = list(title = "Anatomical Entity Name", size = 2), yaxis = list(title = "VST of Read Counts",
                                                                                           zeroline = FALSE), title = stringr::str_wrap(paste("Gene Expression of the gene", single_gene, "in", single_species,
                                                                                                                                              "across tissues", sep = " ")), showlegend = FALSE)
   
@@ -329,7 +329,7 @@ setMethod("plotCVGEx", signature(object = "CoSIAn"), function(object) {
     # text(max(v2[i], v1[i]) + 1.5, y[i], labels = max(v2[i], v1[i])) } }
     
     graphics::legend("topright", legend = colnames(df_subset), col = col, pch = 19, bty = "n", pt.cex = 1, cex = 1, text.col = "black",
-                     horiz = FALSE, inset = c(-0.1, -0.04))
+                     horiz = FALSE, inset = c(0,0))
   }
   
   if (metric_type == "CV_Species") {
