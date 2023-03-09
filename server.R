@@ -12,6 +12,40 @@ server <- function(input,output,session){
     map_species = "",
     metric_type=""
   )
+  histdata <- rnorm(500)
+  CoSIAlogo <- "CoSIA_logo.png"
+  observeEvent(once = TRUE,ignoreNULL = FALSE, ignoreInit = FALSE, eventExpr = histdata, { 
+    # event will be called when histdata changes, which only happens once, when it is initially calculated
+    showModal(modalDialog(class="pizza",
+      title = "Welcome to CoSIA", 
+      tags$figure(
+        align = "center",
+        tags$img( class="pop-logo",
+          src = CoSIAlogo
+        )
+      ),
+      p(style="font-size:15px",
+      strong("CoSIA"), "is a package that provides 
+                        researchers with an alternative methodology for 
+                        comparing across species and tissues using normal 
+                        wild-type RNA-Seq Gene Expression data from Bgee." 
+                        ),
+      br(),
+      p( style="font-size:20px",
+      strong("PLEASE READ THE BRIEF CLARIFICATIONS ON THE LANDING PAGE BEFORE 
+               MOVING TO THE OTHER TABS!"
+               )
+      ),
+      
+      p(style="font-size:20px",
+      "Quick Notes: To use CoSIA fully and smoothly, input gene
+         symbols need species-specific formatting. You must provide and convert 
+         inputs on the first tab prior to using any of the plotting tabs.  
+         Ensembl IDs are required as an output type for any of the plotting 
+      tabs."
+        )
+    ))
+  })
   
   observeEvent(input$conversion_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
