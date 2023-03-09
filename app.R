@@ -5,6 +5,7 @@ library(plotly)
 library(tidyverse)
 library(miceadds)
 library(shinysky)
+library(magrittr)
 
 options(shiny.maxRequestSize = 40*1024^2)
 
