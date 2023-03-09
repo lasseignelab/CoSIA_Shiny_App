@@ -1,5 +1,5 @@
 server <- function(input,output,session){
-  source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
+  miceadds::source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
   global_cosia <- CoSIAn(
     gene_set = "",
     i_species="",
@@ -12,15 +12,18 @@ server <- function(input,output,session){
     map_species = "",
     metric_type=""
   )
+  #Popup on landing page----
   histdata <- rnorm(500)
   CoSIAlogo <- "CoSIA_logo.png"
   observeEvent(once = TRUE,ignoreNULL = FALSE, ignoreInit = FALSE, eventExpr = histdata, { 
     # event will be called when histdata changes, which only happens once, when it is initially calculated
-    showModal(modalDialog(class="pizza",
-      title = "Welcome to CoSIA", 
-      tags$figure(
-        align = "center",
-        tags$img( class="pop-logo",
+    showModal(
+      modalDialog(
+        class="pizza",
+        title = "Welcome to CoSIA", 
+        tags$figure(
+          align = "center",
+          tags$img( class="pop-logo",
           src = CoSIAlogo
         )
       ),
