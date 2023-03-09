@@ -47,11 +47,11 @@ server <- function(input,output,session){
     ))
   })
   
-  observeEvent(input$conversion_instructions , {
+  observeEvent(input$conversion_id_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
                              text='
     <p style="text-align:left">
-    1) Paste IDs in this format:<br>
+      Paste IDs in this format:<br>
       ENSG00000172315<br>
       ENSG00000087460<br>
       ENSG00000049759<br>
@@ -66,29 +66,34 @@ server <- function(input,output,session){
       ENSG00000171863<br>
       ENSG00000025796<br>
       ENSG00000011201<br>
+      <br>
       Or upload a csv file with 1 column.<br>
-      <br>
-      2) Select the species and ID type of your genes.<br>
-      <br>
-      3) Select any number of species and ID types to convert to. You must select as least 1 for each.<br>
-      <br>
-      4) Select between annotationDBI and biomaRt. We recommend annotationDBI because it is faster. <br>
-      <br>
-      5) Select ortholog database. If input species is the same as output species, this step does not matter.
-                      </p>',
+    </p>',
                              html=TRUE)
   })
-  observeEvent(input$plot_instructions ,{
+  
+  observeEvent(input$conversion_output_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
                              text='
     <p style="text-align:left">
+    Select any number of species and ID types to convert to. You must select as least 1 for each.<br>
+      <br>
+    Genes must be converted to Ensembl to use any further CoSIA modules  
+      </p>',
+                             html=TRUE)
+  })
+  observeEvent(input$plot_instructions ,{
+    shinyalert::shinyalert(  title="Plot Expression Instructions",
+                             text='
+    <p style="text-align:left">
     This section of CoSIA plots the expression of genes chosen in the previous step. 
-    Conversion must be done before plotting expression. 
+    Conversion must be done before plotting expression. Genes must be converted to Ensembl format.
+    They will autopopulate the text field once the conversion step has been run.
     
                       </p>',
                              html=TRUE)
   })
-  
+
   observeEvent(input$gene_file,{
     x <- input$gene_file
     x <- read.csv(x$datapath)
@@ -143,9 +148,13 @@ server <- function(input,output,session){
           vec <- pull(tib,Common_Anatomical_Entity_Name)
           updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
           updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
-        })
+        
+          })
       })
-    }
+      if(global_cosia@converted_id[1,1]==0){
+        shinyalert::shinyalert("Error", "No converted IDs were returned. Make sure the input IDs match the chosen ID type", type="warning")
+      }
+      }
   })
   
   observeEvent(input$plot_species,{
@@ -175,7 +184,7 @@ server <- function(input,output,session){
           species <- input$plot_species
           print(tissues)
           incProgress(2/2, detail="Plotting")
-          if(input$plot_by %% 2==0){
+          if(input$plot_by =="Species"){
             gene_tissue <- NULL
             for(gene in genes){
               for(tissue in tissues){
