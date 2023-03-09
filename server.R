@@ -24,37 +24,39 @@ server <- function(input,output,session){
         tags$figure(
           align = "center",
           tags$img( class="pop-logo",
-          src = CoSIAlogo
-        )
-      ),
-      p(style="font-size:15px",
-      strong("CoSIA"), "is a package that provides 
-                        researchers with an alternative methodology for 
-                        comparing across species and tissues using normal 
-                        wild-type RNA-Seq Gene Expression data from Bgee." 
-                        ),
-      br(),
-      p( style="font-size:20px",
-      strong("PLEASE READ THE BRIEF CLARIFICATIONS ON THE LANDING PAGE BEFORE 
-               MOVING TO THE OTHER TABS!"
-               )
-      ),
-      
-      p(style="font-size:20px",
-      "Quick Notes: To use CoSIA fully and smoothly, input gene
-         symbols need species-specific formatting. You must provide and convert 
+                    src = CoSIAlogo
+          )
+        ),
+        p(
+          style="font-size:15px",
+          strong("CoSIA"), "is a package that provides researchers with an 
+          alternative methodology for comparing across species and tissues 
+          using normal wild-type RNA-Seq Gene Expression data from Bgee." 
+        ),
+        br(),
+        p( 
+          style="font-size:20px",
+          strong("PLEASE READ THE BRIEF CLARIFICATIONS ON THE LANDING PAGE 
+          BEFORE MOVING TO THE OTHER TABS!"
+           )
+        ),
+        
+        p(
+          style="font-size:20px",
+          "Quick Notes: To use CoSIA fully and smoothly, input gene symbols 
+          need species-specific formatting. You must provide and convert 
          inputs on the first tab prior to using any of the plotting tabs.  
          Ensembl IDs are required as an output type for any of the plotting 
       tabs."
         )
-    ))
+      ))
   })
   
-  observeEvent(input$conversion_instructions , {
+  observeEvent(input$conversion_id_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
                              text='
     <p style="text-align:left">
-    1) Paste IDs in this format:<br>
+      Paste IDs in this format:<br>
       ENSG00000172315<br>
       ENSG00000087460<br>
       ENSG00000049759<br>
@@ -69,35 +71,34 @@ server <- function(input,output,session){
       ENSG00000171863<br>
       ENSG00000025796<br>
       ENSG00000011201<br>
+      <br>
       Or upload a csv file with 1 column.<br>
-      <br>
-      2) Select the species and ID type of your genes.<br>
-      <br>
-      3) Select any number of species and ID types to convert to. You must select as least 1 for each.<br>
-      <br>
-      4) Select between annotationDBI and biomaRt. We recommend annotationDBI because it is faster. <br>
-      <br>
-      5) Select ortholog database. If input species is the same as output species, this step does not matter.
-                      </p>',
+    </p>',
                              html=TRUE)
   })
-  observeEvent(input$plot_instructions ,{
+  
+  observeEvent(input$conversion_output_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
                              text='
     <p style="text-align:left">
+    Select any number of species and ID types to convert to. You must select as least 1 for each.<br>
+      <br>
+    Genes must be converted to Ensembl to use any further CoSIA modules  
+      </p>',
+                             html=TRUE)
+  })
+  observeEvent(input$plot_instructions ,{
+    shinyalert::shinyalert(  title="Plot Expression Instructions",
+                             text='
+    <p style="text-align:left">
     This section of CoSIA plots the expression of genes chosen in the previous step. 
-    Conversion must be done before plotting expression. 
+    Conversion must be done before plotting expression. Genes must be converted to Ensembl format.
+    They will autopopulate the text field once the conversion step has been run.
     
                       </p>',
                              html=TRUE)
   })
-  output$home_img <- renderImage({
-    
-    list(src = "www/191008_logo_futura.png",
-         width = "100%",
-         height = 330)
-    
-  }, deleteFile = F)
+
   observeEvent(input$gene_file,{
     x <- input$gene_file
     x <- read.csv(x$datapath)
@@ -126,31 +127,39 @@ server <- function(input,output,session){
     print(valid_input)
     if(valid_input){
       try({
-        global_cosia@gene_set <<-  gene_ids
-        global_cosia@i_species <<- gene_input_species
-        global_cosia@o_species <<- conversion_output_species
-        global_cosia@input_id <<- gene_input_id_type
-        global_cosia@output_ids <<- conversion_output_id_types
-        global_cosia@mapping_tool <<- conversion_tool
-        global_cosia@ortholog_database <<-  conversion_ortholog_database
+        withProgress(message="Fetching IDs", value=0,{
+          
+          global_cosia@gene_set <<-  gene_ids
+          global_cosia@i_species <<- gene_input_species
+          global_cosia@o_species <<- conversion_output_species
+          global_cosia@input_id <<- gene_input_id_type
+          global_cosia@output_ids <<- conversion_output_id_types
+          global_cosia@mapping_tool <<- conversion_tool
+          global_cosia@ortholog_database <<-  conversion_ortholog_database
+          
+          global_cosia <<- getConversion(global_cosia)
+          incProgress(2/2, detail="Rendering Table")
+          output$conversion_table <- renderDataTable({global_cosia@converted_id})
+          for_input <- global_cosia@converted_id
+          for_input <- data.frame(for_input[,grepl("ensembl_id",names(for_input))])
+          if(dim(for_input)[2]!=1){
+            for_input <- c(for_input,sep="/")
+          }
+          for_input <- do.call(paste,for_input)
+          for_input <- c(for_input,"")
+          updateSelectizeInput(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
+          
+          tib <- getTissues(conversion_output_species)
+          vec <- pull(tib,Common_Anatomical_Entity_Name)
+          updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
+          updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
         
-        global_cosia <<- getConversion(global_cosia)
-        output$conversion_table <- renderDataTable({global_cosia@converted_id})
-        for_input <- global_cosia@converted_id
-        for_input <- data.frame(for_input[,grepl("ensembl_id",names(for_input))])
-        if(dim(for_input)[2]!=1){
-          for_input <- c(for_input,sep="/")
-        }
-        for_input <- do.call(paste,for_input)
-        for_input <- c(for_input,"")
-        updateSelect2Input(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
-        
-        tib <- getTissues(conversion_output_species)
-        vec <- pull(tib,Common_Anatomical_Entity_Name)
-        updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
-        updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
+          })
       })
-    }
+      if(global_cosia@converted_id[1,1]==0){
+        shinyalert::shinyalert("Error", "No converted IDs were returned. Make sure the input IDs match the chosen ID type", type="warning")
+      }
+      }
   })
   
   observeEvent(input$plot_species,{
@@ -180,7 +189,7 @@ server <- function(input,output,session){
           species <- input$plot_species
           print(tissues)
           incProgress(2/2, detail="Plotting")
-          if(input$plot_by %% 2==0){
+          if(input$plot_by =="Species"){
             gene_tissue <- NULL
             for(gene in genes){
               for(tissue in tissues){
@@ -259,7 +268,7 @@ server <- function(input,output,session){
       valid_input <- FALSE
       shinyalert::shinyalert("Error", "Convert IDs to Ensembl", type="error")
     }
-    else if((nrow(global_cosia@converted_id)==1) & (input$ds_metric== "ds_tissue")){
+    else if((nrow(global_cosia@converted_id)==1) & (input$ds_metric== "DS_Tissue")){
       valid_input <- FALSE
       shinyalert::shinyalert("Error", "DS Tissue requires more than 1 gene", type="error")
     }

@@ -218,8 +218,8 @@ convert_sidebar <- sidebarPanel(
   width = 3,
   wellPanel(
     HTML("<h4>Gene Input</h4>"),
-    actionButton("conversion_instructions", "Instructions"),
     textAreaInput("gene_ids", "Paste IDs"),
+    actionButton("conversion_id_instructions", "Formatting IDs"),
     fileInput("gene_file", "Upload CSV File",
       multiple = FALSE,
       accept = ".csv"
@@ -233,6 +233,7 @@ convert_sidebar <- sidebarPanel(
   ),
   wellPanel(
     HTML("<h4>ID Conversion</h4>"),
+    actionButton("conversion_output_instructions", "Formatting Output"),
     checkboxGroupInput("conversion_output_species", "Output Species",
       choices = species_list[-1]
     ),
@@ -268,7 +269,8 @@ PlotExp_sidebar <- sidebarPanel(
   wellPanel(
     HTML("<h4>Plot Expression</h4>"),
     actionButton("plot_instructions", "Instructions"),
-    shinysky::select2Input("plot_gene", "gene", choices = NULL),
+    selectizeInput("plot_gene", "gene", choices = NULL, multiple=TRUE),
+    selectInput("plot_by", label = "Plot by", choices=c("Species","Tissue")),
     checkboxGroupInput("plot_species",
       "species",
       choices = species_list[-1]
@@ -276,7 +278,6 @@ PlotExp_sidebar <- sidebarPanel(
     checkboxGroupInput("plot_tissue", "tissues",
       choices = "Select Species First"
     ),
-    checkboxInput("plot_by", label = HTML("<b>Plot by Tissue</b>")),
     actionButton("plot_go", "Plot")
   )
 )
@@ -338,7 +339,7 @@ PlotCV_main <- mainPanel(
 )
 CoSIA_PlotCV <- tabPanel(
   "Plot Coefficient of Variation",
-  titlePanel("Gene Expression Variation Across Tissues Between Species"),
+  titlePanel("Gene Expression Variation Across Tissues or Species"),
   sidebarLayout(
     PlotCV_sidebar, PlotCV_main
   )
