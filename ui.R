@@ -261,10 +261,10 @@ CoSIA_convert <- tabPanel(
   )
 )
 
-# Expression Tab
+# Expression Tab----
 PlotExp_sidebar <- sidebarPanel(
-  width = 3,
-  # Plotting Expression----
+  width = 4,
+  # Plotting Expression
   wellPanel(
     HTML("<h4>Plot Expression</h4>"),
     actionButton("plot_instructions", "Instructions"),
