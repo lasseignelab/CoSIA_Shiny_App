@@ -44,7 +44,7 @@ CoSIA_about <- tabPanel(
           src = CoSIAlogo
         ),
         tags$figcaption(
-          "CoSIA logo; Created in BioRender"
+          "CoSIA logo; Created in BioRender.com"
         )
       )
     ),
@@ -52,7 +52,7 @@ CoSIA_about <- tabPanel(
       class = "desc",
       hr(),
       br(),
-      h3("Description:"),
+      br(),
       br(),
       p(
         class = "my-p",
@@ -78,9 +78,12 @@ CoSIA_about <- tabPanel(
       )
     )
   ),
-  hr(),
   br(),
+  br(),
+  br(),
+  hr(),
   div(
+    class="use-cosia",
     tags$h2(
       "Using CoSIA"
       ),
@@ -91,10 +94,13 @@ CoSIA_about <- tabPanel(
         src = CoSIAworkflow
       ),
       tags$figcaption(
-        "CoSIA Workflow; Created in BioRender"
+        "CoSIA Workflow; Created in BioRender.com"
       )
-    ),
+    )
+  ),
     br(),
+  div(
+    class="conversion-tips",
     h4(
       "Converting Gene IDs"
       ),
@@ -113,6 +119,9 @@ CoSIA_about <- tabPanel(
       "use species-specific formatting rules.", 
       br(), 
       "Example: Your gene input is insulin-like growth factor 1.",
+    ),
+    div(
+      class="my-list",
       tags$ul(
         tags$li(
           "The HGNC format for human is",
@@ -132,84 +141,74 @@ CoSIA_about <- tabPanel(
         )
       )
     ),
-    p(
-      class = "my-p",
-      "Information for formatting input symbols for human,
-                          mouse & rat, and zebrafish can be found using",
-      a(
-        href = "https://www.genenames.org/about/guidelines/",
-        "HGNC"
-      ),
-      a(
-        href = "https://www.informatics.jax.org/", "MGI"),
-      "or",
-      a(
-        href = "http://zfin.org/action/marker/search",
-        "ZFIN"
-      ),
-      "respectively or at",
-      a(
-        href = "https://www.ncbi.nlm.nih.gov/gene",
-        "NCBI"
-      ),
-      ". Fly and nematode information can be found using",
-      a(
-        href = "https://flybase.org/", "Flybase"),
-      "and",
-      a(
-        href = "https://wormbase.org/species/c_elegans#014--10",
-        "Wormbase"
-      ),
-      ", respectively."
+    div(
+      p(
+        class = "my-p",
+        "Information for formatting input symbols for human,
+         mouse & rat, and zebrafish can be found using",
+        a(href = "https://www.genenames.org/about/guidelines/","HGNC"),
+        a(href = "https://www.informatics.jax.org/", "MGI"), "or",
+        a(href = "http://zfin.org/action/marker/search", "ZFIN"),
+        "respectively or at",
+        a(href = "https://www.ncbi.nlm.nih.gov/gene", "NCBI"),
+        ". Fly and nematode information can be found using",
+        a(href = "https://flybase.org/", "Flybase"), "and",
+        a(href = "https://wormbase.org/species/c_elegans#014--10","Wormbase"),
+        ", respectively."
+      )
     ),
-    br(),
-    p(
-      class = "my-p",
-      "If you would like to use a csv file as input, it is
-                            advised that you use a small subset of genes. The
-                            gene identifiers", strong("must be in the first
-                            column"), ". Pasted gene entries need to be separated
-                            by a new line."
-    ),
-    br(),
-    p(
-      class = "my-p",
-      "To use any of the downstream plotting tabs, you will need to select", 
-      code("Ensembl_id"),
-      "as an", 
-      strong("Output ID type."), 
-      "Any species that you would like to include in downstream plots need to be 
-      selected as",
-      strong("Output Species"), "during ID Conversion"
-    ),
-    hr(),
-    br(),
-    h4("Plotting Gene Expression & Metrics"),
-    p(
-      class = "my-p",
-      "After ID conversion on the",
-      em("Inputs & Conversions"), "tab, your converted
-                            gene IDs for each species are stored and can be
-                            used in three different comparative gene
-                            expression visualizations found on
-                            the remaining tabs."
-    ),
-    tags$ul(
-      tags$li(
-      "Plot Expression visualizes gene expression across tissues or species for 
-      a single gene"
+    div(
+      p(
+        class = "my-p",
+        "If you would like to use a csv file as input, it is advised that you  
+        use a small subset of genes. The gene identifiers", strong("must be in  
+        the first column"), ". Pasted gene entries need to be separated by a new
+        line."
       ),
-      tags$li(
-        "Plot Diversity & Specificity visualizes diversity and specificity 
-        across your genes in your selected tissues with", code("DS_Gene"),
-        "or across your selected tissues in your geneset with", 
-        code("DS_Tissue"), "."
+      p(
+        class = "my-p",
+        "To use any of the downstream plotting tabs, you will need to select", 
+        code("Ensembl_id"), "as an", strong("Output ID type."), 
+        "Any species that you would like to include in downstream plots need to  
+        be selected as",strong("Output Species"), "during ID Conversion"
+      )
+    )
+  ),
+  hr(),
+  br(),
+  div(
+    class="plotting-tips",
+    div(
+      h4("Plotting Gene Expression & Metrics"),
+      p(
+        class = "my-p",
+        "After ID conversion on the", em("Inputs & Conversions"), 
+        "tab, your converted gene IDs for each species are stored and can be
+        used in three different comparative gene expression visualizations 
+        found on the remaining tabs."
+      )
+    ),
+    div(
+      class="my-list",
+      tags$ul(
+        tags$li(
+        "Plot Expression visualizes gene expression across tissues or species 
+        for a single gene"
+        ),
+        tags$li(
+          "Plot Diversity & Specificity visualizes diversity and specificity 
+          across your genes in your selected tissues with", code("DS_Gene"),
+          "or across your selected tissues in your geneset with", 
+          code("DS_Tissue")
+        ),
+        tags$li(
+          "Plot Coefficient of Variation visualizes variability in expression 
+          across tissues between species"
+        )
       ),
-      tags$li(
-        "The Flybase format for fly is", strong("daf-2")
-      ),
-      tags$li(
-        "The Wormbase format for nematode is", strong("dilp1")
+      br(),
+      p(
+        strong("NOTE:"), code("DS_Tissue"), "requires more than one input gene."
       )
     )
   )

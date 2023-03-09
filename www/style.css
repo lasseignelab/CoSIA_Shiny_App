@@ -5,7 +5,6 @@ html, body {
   margin: 2vw 2vw 2vw 2vw;
   background-color: #fff;
   padding: 2vw 2vw 2vw 2vw;
-  border: 0.5px solid black;
 }
 
 .logo-desc {
@@ -26,7 +25,7 @@ html, body {
 
 .my-p {
   padding: 2vw 2vw 2vw 2vw;
-  font-size: 1em;
+  font-size: 1.5em;
 }
 
 h1{
@@ -47,16 +46,13 @@ h4{
   font-size: 2.5em;
 }
 
-ul {
-  font-size: 2em;
-}
 
 img {
   width: 60vw;
 }
 
 .logo {
-   width: 30vw;
+   width: 25vw;
 }
 
 .pop-logo {
@@ -65,4 +61,21 @@ img {
 
 .modal-title {
   text-align: center;
+}
+
+.my-list {
+  
+  font-size: 1.5em;
+}
+
+.use-cosia {
+  
+}
+
+.conversion-tips {
+  padding: 0vw 7vw 0vw 7vw;
+}
+
+.plotting-tips {
+  padding: 0vw 7vw 0vw 7vw;
 }
