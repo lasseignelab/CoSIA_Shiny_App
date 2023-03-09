@@ -1,5 +1,5 @@
 server <- function(input,output,session){
-  source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
+  miceadds::source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
   global_cosia <- CoSIAn(
     gene_set = "",
     i_species="",
@@ -137,7 +137,7 @@ server <- function(input,output,session){
           }
           for_input <- do.call(paste,for_input)
           for_input <- c(for_input,"")
-          updateSelect2Input(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
+          updateSelectizeInput(session=session,label="gene", inputId = "plot_gene", choices=(for_input))
           
           tib <- getTissues(conversion_output_species)
           vec <- pull(tib,Common_Anatomical_Entity_Name)

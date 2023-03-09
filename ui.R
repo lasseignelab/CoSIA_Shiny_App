@@ -268,7 +268,7 @@ PlotExp_sidebar <- sidebarPanel(
   wellPanel(
     HTML("<h4>Plot Expression</h4>"),
     actionButton("plot_instructions", "Instructions"),
-    shinysky::select2Input("plot_gene", "gene", choices = NULL),
+    selectizeInput("plot_gene", "gene", choices = NULL, multiple=TRUE),
     checkboxGroupInput("plot_species",
       "species",
       choices = species_list[-1]
