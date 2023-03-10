@@ -487,7 +487,7 @@ annotationDBI <- function(input_id, input_dataset, output_ids, input_species, ou
       colnames(merged_data)[which(names(merged_data) == "species_one")] <- paste(input_species,"entrez_id",sep = "_")#change column name so that they are representative of the input species
       if(input_id != "ENTREZID"){
         entrez_id_col_name_input<- paste(input_species,"entrez_id",sep = "_")
-        merged_data <- merged_data |> dplyr::select(-tidyselect::all_of(entrez_id_col_name_input))      
+        merged_data <- merged_data %>% dplyr::select(-tidyselect::all_of(entrez_id_col_name_input))      
       }
       colnames(merged_data)[which(names(merged_data) == "ENTREZID")] <- paste(input_species, "entrez_id", sep = "_")  #changes name to more formal names
       colnames(merged_data)[which(names(merged_data) == "ENSEMBL")] <- paste(input_species, "ensembl_id", sep = "_")  #changes name to more formal names
@@ -506,7 +506,7 @@ annotationDBI <- function(input_id, input_dataset, output_ids, input_species, ou
       colnames(merged_data_ortholog)[names(merged_data_ortholog) == "species_two"] <- paste(output_species, "entrez_id", sep = "_")  #changes name to more formal names
       if("ENTREZID" %in% output_ids == FALSE){
         entrez_id_col_output<- paste(output_species,"entrez_id",sep = "_")
-        merged_data_ortholog <- merged_data_ortholog |> dplyr::select(-tidyselect::all_of(entrez_id_col_output))      
+        merged_data_ortholog <- merged_data_ortholog %>% dplyr::select(-tidyselect::all_of(entrez_id_col_output))      
       }
       colnames(merged_data_ortholog)[which(names(merged_data_ortholog) == "ENTREZID")] <- paste(output_species, "entrez_id", sep = "_")  #changes name to more formal names
       colnames(merged_data_ortholog)[which(names(merged_data_ortholog) == "ENSEMBL")] <- paste(output_species, "ensembl_id", sep = "_")  #changes name to more formal names
@@ -550,7 +550,7 @@ biomaRt<- function(input_id, input_dataset, output_ids, input_species, output_sp
     colnames(output_data)[which(names(output_data) == "ensembl_gene_id")] <- paste(input_species,"ensembl_id",sep = "_")
     colnames(output_data)[which(names(output_data) == "entrezgene_id")] <- paste(input_species,"entrez_id",sep = "_")
     colnames(output_data)[which(names(output_data) == "external_gene_name")] <- paste(input_species,"symbol",sep = "_")
-    output_data <- output_data |> dplyr::select(-contains('.'))      
+    output_data <- output_data %>% dplyr::select(-contains('.'))      
     return(output_data)  # return the biomaRt output
   } 
   else
@@ -587,11 +587,11 @@ biomaRt<- function(input_id, input_dataset, output_ids, input_species, output_sp
     merged_species_data <- merged_species_data[!duplicated(as.list(merged_species_data))]  #remove duplicates
     if(input_id != "entrezgene_id"){
       entrez_id_col_name_input<- paste(input_species,"entrez_id",sep = "_")
-      merged_species_data <- merged_species_data |> dplyr::select(-tidyselect::all_of(entrez_id_col_name_input))      
+      merged_species_data <- merged_species_data %>% dplyr::select(-tidyselect::all_of(entrez_id_col_name_input))      
     }
     if("entrezgene_id" %in% output_ids == FALSE){
       entrez_id_col_output<- paste(output_species,"entrez_id",sep = "_")
-      merged_species_data <- merged_species_data |> dplyr::select(-tidyselect::all_of(entrez_id_col_output))      
+      merged_species_data <- merged_species_data %>% dplyr::select(-tidyselect::all_of(entrez_id_col_output))      
     }
     return(merged_species_data)  # return the final table
   }
