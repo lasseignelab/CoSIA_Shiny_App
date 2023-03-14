@@ -44,7 +44,7 @@ CoSIA_about <- tabPanel(
           src = CoSIAlogo
         ),
         tags$figcaption(
-          "CoSIA logo; Created in BioRender.com"
+          "CoSIA logo"
         )
       )
     ),
@@ -94,7 +94,7 @@ CoSIA_about <- tabPanel(
         src = CoSIAworkflow
       ),
       tags$figcaption(
-        "CoSIA Workflow; Created in BioRender.com"
+        "CoSIA Workflow"
       )
     )
   ),
@@ -264,7 +264,7 @@ CoSIA_convert <- tabPanel(
 
 # Expression Tab----
 PlotExp_sidebar <- sidebarPanel(
-  width = 4,
+  width = 3,
   # Plotting Expression
   wellPanel(
     HTML("<h4>Plot Expression</h4>"),
