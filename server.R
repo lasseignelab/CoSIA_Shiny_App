@@ -19,19 +19,24 @@ server <- function(input,output,session){
     # event will be called when histdata changes, which only happens once, when it is initially calculated
     showModal(
       modalDialog(
-        class="pizza",
-        title = "Welcome to CoSIA", 
-        tags$figure(
-          align = "center",
-          tags$img( class="pop-logo",
-                    src = CoSIAlogo
-          )
-        ),
-        p(
-          style="font-size:15px",
-          strong("CoSIA"), "is a package that provides researchers with an 
+        title = "Welcome to CoSIA",
+        div(
+          div(
+            tags$figure(
+              align = "center",
+              tags$img( class="pop-logo",
+                        src = CoSIAlogo
+              )
+            )
+          ),
+          div(
+            p(
+              style="font-size:15px",
+              strong("CoSIA"), "is a package that provides researchers with an 
           alternative methodology for comparing across species and tissues 
           using normal wild-type RNA-Seq Gene Expression data from Bgee." 
+            )
+          )
         ),
         br(),
         p( 
