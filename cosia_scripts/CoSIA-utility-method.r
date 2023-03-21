@@ -7,6 +7,8 @@
 #' @param species name of a species or multiple species that you want to get available tissue list for
 #'
 #' @return list of tissues that are common/available among the species or multiple species inputted
+#' @import magrittr
+#' @import dplyr
 #' @export
 #'
 #' @examples

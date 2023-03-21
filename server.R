@@ -1,5 +1,9 @@
+library(dplyr)
+library(magrittr)
+library(plotly)
+
 server <- function(input,output,session){
-  miceadds::source.all("cosia_scripts", grepstring = ".r", print.source = FALSE)
+  miceadds::source.all("cosia_scripts", grepstring = ".R", print.source = FALSE)
   global_cosia <- CoSIAn(
     gene_set = "",
     i_species="",

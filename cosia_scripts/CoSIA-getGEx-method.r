@@ -11,8 +11,11 @@ setGeneric("getGEx", function(object) standardGeneric("getGEx"))
 #' getGEx Method
 #'
 #' @param object CoSIAn. 
-#'
+#' @import magrittr
+#' @import dplyr
+#' 
 #' @return CoSIAn Object with gex slot filled
+#' 
 #' @export
 #'
 #' @examples

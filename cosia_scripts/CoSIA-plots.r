@@ -5,6 +5,8 @@
 #' @param single_gene one ensembl id that the user wants to investigate across the mapped species
 #' @return initializes a generic function for plotSpeciesGEx as preparation for defining the plotSpeciesGEx Method
 #'
+#' @import magrittr
+#' @import dplyr
 #' @export
 #' @examples
 #' Kidney_Genes<-CoSIAn(gene_set = c('ENSG00000008710','ENSG00000118762','ENSG00000152217'),

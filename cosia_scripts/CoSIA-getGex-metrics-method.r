@@ -3,6 +3,10 @@
 #' @param object CoSIAn object with all user accessible slots filled with converted_id slot filled
 #'
 #' @return initializes a generic function for getGExMetrics as preparation for defining the getGExMetrics Method
+#' 
+#' @import magrittr
+#' @import dplyr
+#' 
 #' @export
 #' @examples
 #' Kidney_Genes<-CoSIAn(gene_set = c('ENSG00000008710','ENSG00000118762','ENSG00000152217'),
@@ -115,8 +119,8 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
-    CV_Tissue <- filter_gex %>%
-      group_by(Ensembl_ID, Anatomical_entity_name, Species) %>%
+    CV_Tissue <- filter_gex %>% 
+      group_by(Ensembl_ID, Anatomical_entity_name, Species) %>% 
       summarise(CV_Tissue = CV_function(VST, na.rm = FALSE))
     cv_tissue <- tidyr::pivot_wider(CV_Tissue, names_from = Species, values_from = CV_Tissue)
     colnames(cv_tissue)[which(names(cv_tissue) == "Homo_sapiens")] <- "h_sapiens_CV_tissue"
@@ -127,19 +131,19 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     colnames(cv_tissue)[which(names(cv_tissue) == "Caenorhabditis_elegans")] <- "c_elegans_CV_tissue"
     for (i in seq_len(length(colnames(id_dataframe)))) {
       id <- colnames(id_dataframe)[i]
-      id_dataframe <- id_dataframe %>%
+      id_dataframe <- id_dataframe %>% 
         merge(., cv_tissue, by.x = id, by.y = "Ensembl_ID")
     }
     id_dataframe <- id_dataframe[, colSums(is.na(id_dataframe)) < nrow(id_dataframe)]
-    id_dataframe <- id_dataframe %>%
+    id_dataframe <- id_dataframe %>% 
       dplyr::select(order(colnames(id_dataframe), decreasing = TRUE))
-    id_dataframe <- id_dataframe %>%
+    id_dataframe <- id_dataframe %>% 
       dplyr::filter(dplyr::if_all(tidyselect::starts_with("Anatomical_entity_name"), ~Anatomical_entity_name.x == .x))
     duplicated_columns <- duplicated(as.list(id_dataframe))
     id_dataframe <- id_dataframe[!duplicated_columns]
-    id_dataframe <- id_dataframe %>%
+    id_dataframe <- id_dataframe %>% 
       dplyr::rename_with(~stringr::str_remove(., c(".x")))
-    CV_Tissue <- id_dataframe %>%
+    CV_Tissue <- id_dataframe %>% 
       dplyr::rename_with(~stringr::str_remove(., c(".y")))
     colnames(CV_Tissue)[which(names(CV_Tissue) == "Anatomical_enti_name.y")] <- "Anatomical_entity_name"
     CV_Tissue <- unique(CV_Tissue)
@@ -154,8 +158,8 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gene <- dplyr::filter(filter_species, Ensembl_ID %in% id)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
-    CV_Species <- filter_gex %>%
-      group_by(Ensembl_ID, Species) %>%
+    CV_Species <- filter_gex %>% 
+      group_by(Ensembl_ID, Species) %>% 
       summarise(CV_Species = CV_function(VST, na.rm = FALSE))
     cv_species <- tidyr::pivot_wider(CV_Species, names_from = Species, values_from = CV_Species)
     colnames(cv_species)[which(names(cv_species) == "Homo_sapiens")] <- "h_sapiens_CV_species"
@@ -166,15 +170,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     colnames(cv_species)[which(names(cv_species) == "Caenorhabditis_elegans")] <- "c_elegans_CV_species"
     for (i in seq_len(length(colnames(id_dataframe)))) {
       id <- colnames(id_dataframe)[i]
-      id_dataframe <- id_dataframe %>%
+      id_dataframe <- id_dataframe %>% 
         merge(., cv_species, by.x = id, by.y = "Ensembl_ID")
     }
     id_dataframe <- id_dataframe[, colSums(is.na(id_dataframe)) < nrow(id_dataframe)]
-    id_dataframe <- id_dataframe %>%
+    id_dataframe <- id_dataframe %>% 
       dplyr::select(order(colnames(id_dataframe), decreasing = TRUE))
-    id_dataframe <- id_dataframe %>%
+    id_dataframe <- id_dataframe %>% 
       dplyr::rename_with(~stringr::str_remove(., c(".x")))
-    CV_Species <- id_dataframe %>%
+    CV_Species <- id_dataframe %>% 
       dplyr::rename_with(~stringr::str_remove(., c(".y")))
     CV_Species <- unique(CV_Species)
     return(CV_Species)
@@ -190,20 +194,20 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
     filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
     filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
-    filter_gex_D <- filter_gex %>%
+    filter_gex_D <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-    filter_gex_D <- filter_gex_D %>%
-      remove_rownames %>%
+    filter_gex_D <- filter_gex_D %>% 
+      remove_rownames %>% 
       tibble::column_to_rownames(var = "Anatomical_entity_name")
     filter_gex_D <- data.matrix(filter_gex_D, )
     ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
     colnames(ENTROPY_DIVERSITY_G)[which(names(ENTROPY_DIVERSITY_G) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
     
     filter_gex <- data.frame(filter_gex)
-    filter_gex_S <- filter_gex %>%
+    filter_gex_S <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
-    filter_gex_S <- filter_gex_S %>%
-      remove_rownames %>%
+    filter_gex_S <- filter_gex_S %>% 
+      remove_rownames %>% 
       column_to_rownames(var = "Ensembl_ID")
     filter_gex_S <- data.matrix(filter_gex_S, )
     ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -232,20 +236,20 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
       filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
       
-      filter_gex_D <- filter_gex %>%
+      filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
-      filter_gex_D <- filter_gex_D %>%
-        remove_rownames %>%
+      filter_gex_D <- filter_gex_D %>% 
+        remove_rownames %>% 
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_T <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
       colnames(ENTROPY_DIVERSITY_T)[which(names(ENTROPY_DIVERSITY_T) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
       
       filter_gex <- data.frame(filter_gex)
-      filter_gex_S <- filter_gex %>%
+      filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-      filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+      filter_gex_S <- filter_gex_S %>% 
+        remove_rownames %>% 
         column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -276,20 +280,20 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
       filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
       
-      filter_gex_D <- filter_gex %>%
+      filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-      filter_gex_D <- filter_gex_D %>%
-        remove_rownames %>%
+      filter_gex_D <- filter_gex_D %>% 
+        remove_rownames %>% 
         tibble::column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
       colnames(ENTROPY_DIVERSITY_G)[which(names(ENTROPY_DIVERSITY_G) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
       
       filter_gex <- data.frame(filter_gex)
-      filter_gex_S <- filter_gex %>%
+      filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
-      filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+      filter_gex_S <- filter_gex_S %>% 
+        remove_rownames %>% 
         column_to_rownames(var = "Ensembl_ID")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -319,20 +323,20 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_tissue$Scaled_Median_VST <- as.numeric(filter_tissue$Scaled_Median_VST)
       filter_gex <- dplyr::select(filter_tissue, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
       
-      filter_gex_D <- filter_gex %>%
+      filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
-      filter_gex_D <- filter_gex_D %>%
-        remove_rownames %>%
+      filter_gex_D <- filter_gex_D %>% 
+        remove_rownames %>% 
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_T <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
       colnames(ENTROPY_DIVERSITY_T)[which(names(ENTROPY_DIVERSITY_T) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
       
       filter_gex <- data.frame(filter_gex)
-      filter_gex_S <- filter_gex %>%
+      filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-      filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+      filter_gex_S <- filter_gex_S %>% 
+        remove_rownames %>% 
         column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
