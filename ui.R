@@ -219,7 +219,7 @@ convert_sidebar <- sidebarPanel(
   wellPanel(
     HTML("<h4>Gene Input</h4>"),
     textAreaInput("gene_ids", "Paste IDs"),
-    actionButton("conversion_id_instructions", "Formatting IDs"),
+    actionButton("conversion_id_instructions", "Formatting IDs Info"),
     fileInput("gene_file", "Upload CSV File",
       multiple = FALSE,
       accept = ".csv"

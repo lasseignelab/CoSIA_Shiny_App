@@ -119,9 +119,10 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
-    CV_Tissue <- filter_gex %>% 
-      group_by(Ensembl_ID, Anatomical_entity_name, Species) %>% 
-      summarise(CV_Tissue = CV_function(VST, na.rm = FALSE))
+
+    CV_Tissue <- filter_gex %>%
+      dplyr::group_by(Ensembl_ID, Anatomical_entity_name, Species) %>%
+      dplyr::summarise(CV_Tissue = CV_function(VST, na.rm = FALSE))
     cv_tissue <- tidyr::pivot_wider(CV_Tissue, names_from = Species, values_from = CV_Tissue)
     colnames(cv_tissue)[which(names(cv_tissue) == "Homo_sapiens")] <- "h_sapiens_CV_tissue"
     colnames(cv_tissue)[which(names(cv_tissue) == "Mus_musculus")] <- "m_musculus_CV_tissue"
@@ -158,9 +159,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gene <- dplyr::filter(filter_species, Ensembl_ID %in% id)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
+<<<<<<< HEAD
     CV_Species <- filter_gex %>% 
       group_by(Ensembl_ID, Species) %>% 
       summarise(CV_Species = CV_function(VST, na.rm = FALSE))
+=======
+    CV_Species <- filter_gex %>%
+      dplyr::group_by(Ensembl_ID, Species) %>%
+      dplyr::summarise(CV_Species = CV_function(VST, na.rm = FALSE))
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
     cv_species <- tidyr::pivot_wider(CV_Species, names_from = Species, values_from = CV_Species)
     colnames(cv_species)[which(names(cv_species) == "Homo_sapiens")] <- "h_sapiens_CV_species"
     colnames(cv_species)[which(names(cv_species) == "Mus_musculus")] <- "m_musculus_CV_species"
@@ -196,8 +203,13 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
     filter_gex_D <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
     filter_gex_D <- filter_gex_D %>% 
       remove_rownames %>% 
+=======
+    filter_gex_D <- filter_gex_D %>%
+      tibble::remove_rownames %>%
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
       tibble::column_to_rownames(var = "Anatomical_entity_name")
     filter_gex_D <- data.matrix(filter_gex_D, )
     ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
@@ -206,9 +218,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gex <- data.frame(filter_gex)
     filter_gex_S <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
     filter_gex_S <- filter_gex_S %>% 
       remove_rownames %>% 
       column_to_rownames(var = "Ensembl_ID")
+=======
+    filter_gex_S <- filter_gex_S %>%
+      tibble::remove_rownames %>%
+      tibble::column_to_rownames(var = "Ensembl_ID")
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
     filter_gex_S <- data.matrix(filter_gex_S, )
     ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
     colnames(ENTROPY_SPECIFITY_G)[which(names(ENTROPY_SPECIFITY_G) == "DS_function..Specificity...filter_gex_S.")] <- "Specificity"
@@ -238,8 +256,13 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
       filter_gex_D <- filter_gex_D %>% 
         remove_rownames %>% 
+=======
+      filter_gex_D <- filter_gex_D %>%
+        tibble::remove_rownames %>%
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_T <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
@@ -248,9 +271,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gex <- data.frame(filter_gex)
       filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
       filter_gex_S <- filter_gex_S %>% 
         remove_rownames %>% 
         column_to_rownames(var = "Anatomical_entity_name")
+=======
+      filter_gex_S <- filter_gex_S %>%
+        remove_rownames %>%
+        tibble::column_to_rownames(var = "Anatomical_entity_name")
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
       colnames(ENTROPY_SPECIFITY_T)[which(names(ENTROPY_SPECIFITY_T) == "DS_function..Specificity...filter_gex_S.")] <- "Specificity"
@@ -292,9 +321,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gex <- data.frame(filter_gex)
       filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
       filter_gex_S <- filter_gex_S %>% 
         remove_rownames %>% 
         column_to_rownames(var = "Ensembl_ID")
+=======
+      filter_gex_S <- filter_gex_S %>%
+        remove_rownames %>%
+        tibble::column_to_rownames(var = "Ensembl_ID")
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
       colnames(ENTROPY_SPECIFITY_G)[which(names(ENTROPY_SPECIFITY_G) == "DS_function..Specificity...filter_gex_S.")] <- "Specificity"
@@ -335,9 +370,15 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gex <- data.frame(filter_gex)
       filter_gex_S <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
+<<<<<<< HEAD
       filter_gex_S <- filter_gex_S %>% 
         remove_rownames %>% 
         column_to_rownames(var = "Anatomical_entity_name")
+=======
+      filter_gex_S <- filter_gex_S %>%
+        remove_rownames %>%
+        tibble::column_to_rownames(var = "Anatomical_entity_name")
+>>>>>>> 8a4ffae (added package calls for getGex-metrics)
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
       colnames(ENTROPY_SPECIFITY_T)[which(names(ENTROPY_SPECIFITY_T) == "DS_function..Specificity...filter_gex_S.")] <- "Specificity"
