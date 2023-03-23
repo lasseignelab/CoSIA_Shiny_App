@@ -171,6 +171,12 @@ CoSIA_about <- tabPanel(
         code("Ensembl_id"), "as an", strong("Output ID type."), 
         "Any species that you would like to include in downstream plots need to  
         be selected as",strong("Output Species"), "during ID Conversion"
+      ),
+      p(
+        class = "my-p",
+        "The default tools are", strong("annotationDBI"), "and", strong("Homologene"),
+        "because of their speed.", strong("biomaRt"), "and", strong("NCBIOrthologDatabase"),
+        "are also available via dropdown menus."
       )
     )
   ),
