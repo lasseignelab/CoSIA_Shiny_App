@@ -12,8 +12,10 @@ setGeneric("getConversion", function(object) standardGeneric("getConversion"))
 #'
 #' @return CoSIAn object with converted_id slot filled
 #' @export
+
 #' @import magrittr
 #' @import dplyr
+
 #' @importFrom stats na.omit
 #' @importFrom tidyselect contains
 #' 
