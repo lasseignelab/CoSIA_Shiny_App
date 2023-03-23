@@ -251,7 +251,9 @@ convert_sidebar <- sidebarPanel(
 )
 
 convert_main <- mainPanel(
-  dataTableOutput("conversion_table"), # DT:: causes app to break
+  downloadButton("conversion_download", "Download File Once Data Table has Loaded"),
+  dataTableOutput("conversion_table"),# DT:: causes app to break
+  
 )
 
 CoSIA_convert <- tabPanel(

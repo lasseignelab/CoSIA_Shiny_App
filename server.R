@@ -162,7 +162,13 @@ server <- function(input,output,session){
           vec <- pull(tib,Common_Anatomical_Entity_Name)
           updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
           updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
-        
+          
+          output$conversion_download <- downloadHandler(filename = function() {
+            paste0("conversion_download", ".csv")
+          },
+          content = function(file) {
+            write.csv(conversion_dataframe,file)
+          })
           })
       })
       if(global_cosia@converted_id[1,1]==0){
