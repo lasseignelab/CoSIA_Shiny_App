@@ -7,11 +7,11 @@ library(miceadds)
 library(shinyalert)
 library(tidyverse)
 
-options(shiny.maxRequestSize = 40*1024^2)
+options(shiny.maxRequestSize = 7*10^9)
 
 source("ui.R")
 source("server.R")
-miceadds::source.all("cosia_scripts", grepstring = ".R", print.source = FALSE)
+miceadds::source.all("R/cosia_scripts", grepstring = ".R", print.source = FALSE)
 
 #usethis::use_pipe(export = TRUE)
 
