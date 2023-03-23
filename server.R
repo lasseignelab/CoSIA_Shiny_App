@@ -1,6 +1,10 @@
 library(dplyr)
 library(magrittr)
 library(plotly)
+library(miceadds)
+library(shiny)
+library(shinyalert)
+library(tidyverse)
 
 server <- function(input,output,session){
   miceadds::source.all("cosia_scripts", grepstring = ".R", print.source = FALSE)
