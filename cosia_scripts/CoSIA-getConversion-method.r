@@ -548,7 +548,7 @@ biomaRt<- function(input_id, input_dataset, output_ids, input_species, output_sp
     colnames(output_data)[which(names(output_data) == "ensembl_gene_id")] <- paste(input_species,"ensembl_id",sep = "_")
     colnames(output_data)[which(names(output_data) == "entrezgene_id")] <- paste(input_species,"entrez_id",sep = "_")
     colnames(output_data)[which(names(output_data) == "external_gene_name")] <- paste(input_species,"symbol",sep = "_")
-    output_data <- output_data |> dplyr::select(-contains('.'))      
+    output_data <- output_data |> dplyr::select(-tidyselect::contains('.'))      
     return(output_data)  # return the biomaRt output
   } 
   else
@@ -557,7 +557,7 @@ biomaRt<- function(input_id, input_dataset, output_ids, input_species, output_sp
     attributes <- c("entrezgene_id", input_id)  # sets input ids and entrezids as attributes (output values)
     filters <- input_id  # set the input ids as the filter (input values)
     output_data <- biomaRt::getBM(attributes = attributes, filters = filters, values = input_dataset, mart = mart, uniqueRows = TRUE, bmHeader = FALSE)  # run the convesion through biomaRt
-    output_data <- na.omit(output_data)  #omit the NA values
+    output_data <- stats::na.omit(output_data)  #omit the NA values
     id <- homolog(output_data$entrezgene_id, species_number, ortholog_database)  #now that we have the entrezids for the input species we can run it through the homolog function and then get the entrezids for the other species
     id <- data.frame(id)  #this makes sure that our homologous gene list is in a dataframe
     names(output_data)[names(output_data) == "entrezgene_id"] <- "species_one"  # change the name so we can merge the original and the homologous dataframes together
