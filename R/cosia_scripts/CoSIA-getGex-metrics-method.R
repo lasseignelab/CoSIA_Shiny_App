@@ -188,22 +188,18 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   # DS_Gene : output genes restricted by mapped tissues and gene set
   DS_Gene <- function(map_species, map_tissues) {
     load("data/EH_Data.RData")
-    print("Test 1")
     filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
     Experimental_Hub_File <- NULL
     filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
     id <- as.vector(t(id_dataframe))
-    print("Test 2")
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
     filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
     filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
     filter_gex_D <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-    print("Test 3")
     filter_gex_D <- filter_gex_D %>%
-      remove_rownames %>%
+      tibble::remove_rownames %>%
       tibble::column_to_rownames(var = "Anatomical_entity_name")
-    print("Test 4")
     filter_gex_D <- data.matrix(filter_gex_D, )
     ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
     colnames(ENTROPY_DIVERSITY_G)[which(names(ENTROPY_DIVERSITY_G) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
@@ -211,9 +207,9 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
     filter_gex <- data.frame(filter_gex)
     filter_gex_S <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
-    print("Test 5")
+
     filter_gex_S <- filter_gex_S %>%
-      remove_rownames %>%
+      tibble::remove_rownames %>%
       tibble::column_to_rownames(var = "Ensembl_ID")
     filter_gex_S <- data.matrix(filter_gex_S, )
     ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -246,7 +242,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
 
       filter_gex_D <- filter_gex_D %>%
-        remove_rownames %>%
+        tibble::remove_rownames %>%
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_T <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
@@ -257,7 +253,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
 
       filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+        tibble::remove_rownames %>%
         tibble::column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -291,7 +287,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
       filter_gex_D <- filter_gex_D %>% 
-        remove_rownames %>% 
+        tibble::remove_rownames %>% 
         tibble::column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
@@ -302,7 +298,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
 
       filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+        tibble::remove_rownames %>%
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_G <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues
@@ -335,7 +331,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
       filter_gex_D <- filter_gex_D %>% 
-        remove_rownames %>% 
+        tibble::remove_rownames %>% 
         tibble::column_to_rownames(var = "Ensembl_ID")
       filter_gex_D <- data.matrix(filter_gex_D, )
       ENTROPY_DIVERSITY_T <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
@@ -346,7 +342,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
 
       filter_gex_S <- filter_gex_S %>%
-        remove_rownames %>%
+        tibble::remove_rownames %>%
         tibble::column_to_rownames(var = "Anatomical_entity_name")
       filter_gex_S <- data.matrix(filter_gex_S, )
       ENTROPY_SPECIFITY_T <- data.frame(DS_function("Specificity", filter_gex_S))  # across tissues

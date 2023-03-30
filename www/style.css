@@ -1,0 +1,81 @@
+/*
+ * Base Tag Formatting
+ */
+html, body {
+  margin: 2vw 2vw 2vw 2vw;
+  background-color: #fff;
+  padding: 2vw 2vw 2vw 2vw;
+}
+
+.logo-desc {
+  width: 100%;
+  text-align: center;
+}
+
+.logo-div {
+  width: 50%;
+  float: left;
+  justify-content: center;
+  display: flex;
+}
+
+.desc {
+  margin-left: 50%;
+}
+
+.my-p {
+  padding: 2vw 2vw 2vw 2vw;
+  font-size: 1.5em;
+}
+
+h1{
+  font-size: 5em;
+  ;
+}
+
+h2{
+  font-size: 4em;
+  text-align: center;
+}
+
+h3{
+  font-size: 3em;
+}
+
+h4{
+  font-size: 2.5em;
+}
+
+
+img {
+  width: 60vw;
+}
+
+.logo {
+   width: 25vw;
+}
+
+.pop-logo {
+   width: 10vw
+}
+
+.modal-title {
+  text-align: center;
+}
+
+.my-list {
+  
+  font-size: 1.5em;
+}
+
+.use-cosia {
+  
+}
+
+.conversion-tips {
+  padding: 0vw 7vw 0vw 7vw;
+}
+
+.plotting-tips {
+  padding: 0vw 7vw 0vw 7vw;
+}
