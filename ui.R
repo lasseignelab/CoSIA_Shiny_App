@@ -65,7 +65,7 @@ CoSIA_about <- tabPanel(
         Using RNA-Seq Gene Expression data, CoSIA provides multiple 
         visualization tools to explore the transcriptome diversity and 
         variation across genes, tissues, and species. CoSIA uses Coefficient of 
-        Variation and Shannon Entropy and Specificity to calculate
+        Variation, Shannon Entropy, and Specificity to calculate
         transcriptome diversity and variation. CoSIA also provides additional 
         conversion tools and utilities to provide a streamlined methodology for 
         cross-species comparison across the tissues and genes of five commonly
@@ -161,7 +161,7 @@ CoSIA_about <- tabPanel(
       p(
         class = "my-p",
         "If you would like to use a csv file as input, it is advised that you  
-        use a small subset of genes. The gene identifiers", strong("must be in  
+        use a small subset of genes (< 1000 genes). The gene identifiers", strong("must be in  
         the first column"), ". Pasted gene entries need to be separated by a new
         line."
       ),
