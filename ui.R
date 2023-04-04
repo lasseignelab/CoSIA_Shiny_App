@@ -161,7 +161,7 @@ CoSIA_about <- tabPanel(
       p(
         class = "my-p",
         "If you would like to use a csv file as input, it is advised that you  
-        use a small subset of genes (< 1000 genes). The gene identifiers", strong("must be in  
+        use a subset of genes smaller than 10,000. The gene identifiers", strong("must be in  
         the first column"), ". Pasted gene entries need to be separated by a new
         line."
       ),
