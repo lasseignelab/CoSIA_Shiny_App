@@ -34,7 +34,7 @@ CoSIA_about <- tabPanel(
   title = "About CoSIA",
   titlePanel("Cross-Species Investigation & Analysis"),
   div(
-    claas = "logo-desc",
+    class = "logo-desc",
     div(
       class = "logo-div",
       tags$figure(
