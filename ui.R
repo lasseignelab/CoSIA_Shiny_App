@@ -34,7 +34,7 @@ CoSIA_about <- tabPanel(
   title = "About CoSIA",
   titlePanel("Cross-Species Investigation & Analysis"),
   div(
-    class = "logo-desc",
+    claas = "logo-desc",
     div(
       class = "logo-div",
       tags$figure(
@@ -59,7 +59,11 @@ CoSIA_about <- tabPanel(
         strong(
         "CoSIA"
         ), 
-        "is a package that provides researchers with an 
+        "is a",
+        tags$a(href="https://github.com/lasseignelab/CoSIA","package"),
+        "created by the",
+        tags$a(href="https://www.lasseigne.org/","Lasseigne Lab"),
+        "that provides researchers with an 
         alternative methodology for comparing across species and tissues using 
         normal wild-type RNA-Seq Gene Expression data from Bgee.
         Using RNA-Seq Gene Expression data, CoSIA provides multiple 
@@ -161,7 +165,7 @@ CoSIA_about <- tabPanel(
       p(
         class = "my-p",
         "If you would like to use a csv file as input, it is advised that you  
-        use a subset of genes smaller than 10,000. The gene identifiers", strong("must be in  
+        use a subset smaller than 10,000 genes. The gene identifiers", strong("must be in  
         the first column"), ". Pasted gene entries need to be separated by a new
         line."
       ),
