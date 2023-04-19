@@ -91,6 +91,7 @@ CoSIA_about <- tabPanel(
     tags$figure(
       align = "center",
       tags$img(
+        class="cosia-workflow",
         src = CoSIAworkflow
       ),
       tags$figcaption(
@@ -356,7 +357,8 @@ CoSIA_PlotCV <- tabPanel(
 
 ui <- navbarPage(
   tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "style.css"),
+    tags$script(type = "text/javascript", src = "code.js")
   ),
   title = "CoSIA: Cross-Species Investigation & Analysis",
   position = "fixed-top",

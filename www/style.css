@@ -30,7 +30,10 @@ html, body {
 
 h1{
   font-size: 5em;
-  ;
+}
+
+img{
+  width: 10px;
 }
 
 h2{
@@ -47,7 +50,7 @@ h4{
 }
 
 
-img {
+.cosia-workflow {
   width: 60vw;
 }
 
