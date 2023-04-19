@@ -1,6 +1,7 @@
 /*
  * Base Tag Formatting
  */
+
 html, body {
   margin: 2vw 2vw 2vw 2vw;
   background-color: #fff;
@@ -10,6 +11,10 @@ html, body {
 .logo-desc {
   width: 100%;
   text-align: center;
+}
+
+.navbar-brand{
+  
 }
 
 .logo-div {
@@ -78,4 +83,11 @@ img {
 
 .plotting-tips {
   padding: 0vw 7vw 0vw 7vw;
+}
+
+.branding {
+  
+  font-size: .8em;
+  
+  text-align: center;
 }

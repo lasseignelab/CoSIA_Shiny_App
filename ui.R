@@ -57,7 +57,7 @@ CoSIA_about <- tabPanel(
       p(
         class = "my-p",
         strong(
-        "CoSIA"
+          "CoSIA"
         ), 
         "is a",
         tags$a(href="https://github.com/lasseignelab/CoSIA","package"),
@@ -75,7 +75,7 @@ CoSIA_about <- tabPanel(
         cross-species comparison across the tissues and genes of five commonly
         used biomedical research species",
         em(
-        "(Mus musculus, Rattus norvegicus, Danio rerio, Drosophila melanogaster, 
+          "(Mus musculus, Rattus norvegicus, Danio rerio, Drosophila melanogaster, 
         and Caenorhabditis elegans)"
         ),
         "in addition to Homo sapiens."
@@ -90,7 +90,7 @@ CoSIA_about <- tabPanel(
     class="use-cosia",
     tags$h2(
       "Using CoSIA"
-      ),
+    ),
     br(),
     tags$figure(
       align = "center",
@@ -102,12 +102,12 @@ CoSIA_about <- tabPanel(
       )
     )
   ),
-    br(),
+  br(),
   div(
     class="conversion-tips",
     h4(
       "Converting Gene IDs"
-      ),
+    ),
     p(
       class = "my-p",
       "To get started, navigate to the",
@@ -202,7 +202,7 @@ CoSIA_about <- tabPanel(
       class="my-list",
       tags$ul(
         tags$li(
-        "Plot Expression visualizes gene expression across tissues or species 
+          "Plot Expression visualizes gene expression across tissues or species 
         for a single gene"
         ),
         tags$li(
@@ -220,6 +220,18 @@ CoSIA_about <- tabPanel(
       p(
         strong("NOTE:"), code("DS_Tissue"), "requires more than one input gene."
       )
+    ),
+    hr(),
+    br(),
+    div(
+      class = "branding",
+      p(
+        "All figures created with BioRender.com"
+      ),
+      p(
+        "Copyright 2023 by",
+        tags$a(href="https://www.lasseigne.org/","Lasseigne Lab")
+      )
     )
   )
 )
@@ -231,30 +243,30 @@ convert_sidebar <- sidebarPanel(
     textAreaInput("gene_ids", "Paste IDs"),
     actionButton("conversion_id_instructions", "Formatting IDs Info"),
     fileInput("gene_file", "Upload CSV File",
-      multiple = FALSE,
-      accept = ".csv"
+              multiple = FALSE,
+              accept = ".csv"
     ),
     selectInput("gene_input_species", "Input Species",
-      choices = species_list, selected = "Select..."
+                choices = species_list, selected = "Select..."
     ),
     selectInput("gene_input_id_type", "Input ID type",
-      choices = id_type_list, selected = "Select..."
+                choices = id_type_list, selected = "Select..."
     )
   ),
   wellPanel(
     HTML("<h4>ID Conversion</h4>"),
     actionButton("conversion_output_instructions", "Formatting Output"),
     checkboxGroupInput("conversion_output_species", "Output Species",
-      choices = species_list[-1]
+                       choices = species_list[-1]
     ),
     checkboxGroupInput("conversion_output_id_types", "Output ID types",
-      choices = id_type_list[-1]
+                       choices = id_type_list[-1]
     ),
     selectInput("conversion_tool", "Tool",
-      choices = tool_list
+                choices = tool_list
     ),
     selectInput("conversion_ortholog_database", "Otholog Database",
-      choices = homolog_database_list
+                choices = homolog_database_list
     ),
     actionButton("conversion_go", "Convert IDs")
   )
@@ -284,11 +296,11 @@ PlotExp_sidebar <- sidebarPanel(
     selectizeInput("plot_gene", "gene", choices = NULL, multiple=TRUE),
     selectInput("plot_by", label = "Plot by", choices=c("Species","Tissue")),
     checkboxGroupInput("plot_species",
-      "species",
-      choices = species_list[-1]
+                       "species",
+                       choices = species_list[-1]
     ),
     checkboxGroupInput("plot_tissue", "tissues",
-      choices = "Select Species First"
+                       choices = "Select Species First"
     ),
     actionButton("plot_go", "Plot")
   )
@@ -312,10 +324,10 @@ PlotDS_sidebar <- sidebarPanel(
   wellPanel(
     HTML("<h4>Plot DS</h4>"),
     checkboxGroupInput("ds_tissue", "tissues",
-      choices = "run conversion first"
+                       choices = "run conversion first"
     ),
     selectInput("ds_metric", "metric",
-      choices = c("DS_Gene", "DS_Tissue")
+                choices = c("DS_Gene", "DS_Tissue")
     ),
     actionButton("ds_go", "Plot")
   )
@@ -338,10 +350,10 @@ PlotCV_sidebar <- sidebarPanel(
   wellPanel(
     HTML("<h4>Plot CV</h4>"),
     checkboxGroupInput("cv_tissue", "tissues",
-      choices = "run conversion first"
+                       choices = "run conversion first"
     ),
     selectInput("cv_metric", "metric",
-      choices = c("CV_Tissue", "CV_Species")
+                choices = c("CV_Tissue", "CV_Species")
     ),
     actionButton("cv_go", "Plot")
   )
