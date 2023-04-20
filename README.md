@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/539156415.svg)](https://zenodo.org/badge/latestdoi/539156415)
+
 # CoSIA_Shiny_App
 A ShinyApp for CoSIA
 
