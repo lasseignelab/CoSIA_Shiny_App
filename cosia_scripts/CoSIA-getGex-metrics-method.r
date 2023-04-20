@@ -113,10 +113,12 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   CV_Tissue <- function(map_species, map_tissues) {
     load("data/EH_Data.RData")
     filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    Experimental_Hub_File <<- NULL
+    rm(Experimental_Hub_File)
     filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
+    rm(filter_species)
     id <- as.vector(t(id_dataframe))
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
+    rm(filter_tissue)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
 
@@ -154,9 +156,10 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   CV_Species <- function(map_species, map_tissues) {
     load("data/EH_Data.RData")
     filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    Experimental_Hub_File <<- NULL
+    rm(Experimental_Hub_File)
     id <- as.vector(t(id_dataframe))
     filter_gene <- dplyr::filter(filter_species, Ensembl_ID %in% id)
+    rm(filter_species)
     filter_gex <- tidyr::separate_rows(filter_gene, VST)
     filter_gex$VST <- as.numeric(filter_gex$VST)
     CV_Species <- filter_gex %>%
@@ -188,22 +191,20 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   # DS_Gene : output genes restricted by mapped tissues and gene set
   DS_Gene <- function(map_species, map_tissues) {
     load("data/EH_Data.RData")
-    print("Test 1")
     filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    Experimental_Hub_File <- NULL
+    rm(Experimental_Hub_File)
     filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
+    rm(filter_species)
     id <- as.vector(t(id_dataframe))
-    print("Test 2")
     filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
+    rm(filter_tissue)
     filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
     filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
     filter_gex_D <- filter_gex %>% 
       tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
-    print("Test 3")
     filter_gex_D <- filter_gex_D %>%
       remove_rownames %>%
       tibble::column_to_rownames(var = "Anatomical_entity_name")
-    print("Test 4")
     filter_gex_D <- data.matrix(filter_gex_D, )
     ENTROPY_DIVERSITY_G <- data.frame(DS_function("Diversity", filter_gex_D))  # across genes
     colnames(ENTROPY_DIVERSITY_G)[which(names(ENTROPY_DIVERSITY_G) == "DS_function..Diversity...filter_gex_D.")] <- "Diversity"
