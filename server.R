@@ -291,6 +291,10 @@ server <- function(input,output,session){
       valid_input <- FALSE
       shinyalert::shinyalert("Error", "DS Tissue requires more than 1 gene", type="error")
     }
+    else if((length(input$ds_tissue)==1) & (input$ds_metric== "DS_Gene")){
+      valid_input <- FALSE
+      shinyalert::shinyalert("Error", "DS Gene requires more than 1 tissue", type="error")
+    }
     if(valid_input){try({
       print("running ds")
       withProgress(message="Plotting Metric", value=0,{

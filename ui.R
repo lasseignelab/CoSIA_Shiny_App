@@ -218,7 +218,8 @@ CoSIA_about <- tabPanel(
       ),
       br(),
       p(
-        strong("NOTE:"), code("DS_Tissue"), "requires more than one input gene."
+        strong("NOTE:"), code("DS_Tissue"), "requires more than one input gene and",
+        code("DS_Gene"), "requires more than one input tissue."
       )
     ),
     hr(),
