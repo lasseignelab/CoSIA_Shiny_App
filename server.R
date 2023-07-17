@@ -5,6 +5,12 @@ library(miceadds)
 library(shiny)
 library(shinyalert)
 library(tidyverse)
+library(org.Hs.eg.db)
+library(org.Mm.eg.db)
+library(org.Rn.eg.db)
+library(org.Dm.eg.db)
+library(org.Dr.eg.db)
+library(org.Ce.eg.db)
 
 server <- function(input,output,session){
   miceadds::source.all("cosia_scripts", grepstring = ".R", print.source = FALSE)
@@ -20,7 +26,7 @@ server <- function(input,output,session){
     map_species = "",
     metric_type=""
   )
-  #Popup on landing page----
+  # Popup on landing page----
   histdata <- rnorm(500)
   CoSIAlogo <- "CoSIA_logo.png"
   observeEvent(once = TRUE,ignoreNULL = FALSE, ignoreInit = FALSE, eventExpr = histdata, { 
@@ -64,7 +70,7 @@ server <- function(input,output,session){
         )
       ))
   })
-  
+  # Instruction Popups----
   observeEvent(input$conversion_id_instructions , {
     shinyalert::shinyalert(  title="Conversion Instructions",
                              text='
@@ -112,6 +118,7 @@ server <- function(input,output,session){
                              html=TRUE)
   })
 
+  # Actions----  
   observeEvent(input$gene_file,{
     x <- input$gene_file
     x <- read.csv(x$datapath)
@@ -123,8 +130,89 @@ server <- function(input,output,session){
     
   })
   
+  valid_ids <- reactiveValues(checked = character(), failed = character(), 
+                              errorM = character(), warningM = character(),
+                              printM = character())
+  
+  observeEvent(input$check_inputs,{
+    gene_inputs <- unlist(strsplit(input$gene_ids, split = "\n"))
+    gene_input_species <- input$gene_input_species
+    gene_input_id_type <- input$gene_input_id_type
+    
+    valid_input <- TRUE
+    if(is.null(gene_inputs)|
+       gene_input_species == "Select..."|
+       gene_input_id_type == "Select..."){
+      valid_input <- FALSE
+      shinyalert::shinyalert("Error", "Please fill out all fields", type="error")
+    }
+    print(valid_input)
+    if(valid_input){
+      tryCatch({
+        print(gene_inputs)
+        gene_inputs_tws <- map(
+          gene_inputs, 
+          ~ trimws(
+            .x,
+            which = c("both"),
+            whitespace = "[ \t]"
+          )
+        )
+        print(gene_inputs_tws)
+        checked <- check_ids(unlist(gene_inputs_tws), 
+                             gene_input_id_type, 
+                             gene_input_species)
+        valid_ids$checked <- checked |> dplyr::filter(found == TRUE) |> 
+          dplyr::select(1)
+        if(nrow(valid_ids$checked) != 0){
+          shinyalert::shinyalert("Success", "Valid IDs are available for conversion on the next tab!", type="success")
+        }
+        
+        valid_ids$failed <- checked |> dplyr::filter(found == FALSE) |> 
+          dplyr::select(1)
+        if(nrow(valid_ids$failed) != 0){
+          message("\nSome IDs were not found in the species database (org.db).\nPlease check these IDs for mispellings, missing or transposed values, or the correct species.\nFor more information about possible sources of error, please see instructions on 'Inputs' page.")
+        }
+        
+      }, error = function(e) {
+        # Handle the error condition
+        valid_ids$errorM <- as.character(e)
+      }, warning = function(w) {
+        # Handle the warning condition
+        valid_ids$warningM <- as.character(w)
+      }, message = function(m){
+        valid_ids$printM <- as.character(m)
+      })
+    }
+    
+  })
+  
+ 
+  output$errors <- renderText({
+    valid_ids$errorM
+  })
+  output$warnings <- renderText({
+    valid_ids$warningM
+  })
+  
+  output$printed <- renderText({
+    valid_ids$printM
+  })
+  output$failed_input_check <- renderPrint({
+    valid_ids$failed
+  })
+  
+  observeEvent(input$reset_inputs,{
+    valid_ids$checked <- character()
+    valid_ids$failed <- character()
+    valid_ids$warningM <- character()
+    valid_ids$errorM <- character()
+    valid_ids$printM <- character()
+  })
+  
   observeEvent(input$conversion_go,{
-    gene_ids <- unlist(strsplit(input$gene_ids,split = "\n"))
+    id_vec <- valid_ids$checked$inputs
+    gene_ids <- unlist(strsplit(id_vec,split = "\n"))
     gene_input_species <- input$gene_input_species
     gene_input_id_type <- input$gene_input_id_type
     conversion_output_species <- input$conversion_output_species
@@ -133,7 +221,7 @@ server <- function(input,output,session){
     conversion_ortholog_database <- input$conversion_ortholog_database
     
     valid_input <- TRUE
-    if(is.null(gene_ids)|is.null(gene_input_species)|is.null(conversion_output_species)|is.null(gene_input_id_type)|is.null(conversion_output_id_types)){
+    if(is.null(conversion_output_species)|is.null(conversion_output_id_types)){
       valid_input <- FALSE
       shinyalert::shinyalert("Error", "Fill out All Fields", type="error")
     }
@@ -152,6 +240,7 @@ server <- function(input,output,session){
           
           global_cosia <<- getConversion(global_cosia)
           incProgress(2/2, detail="Rendering Table")
+          conversion_df <- reactive(global_cosia@converted_id)
           output$conversion_table <- renderDataTable({global_cosia@converted_id})
           for_input <- global_cosia@converted_id
           for_input <- data.frame(for_input[,grepl("ensembl_id",names(for_input))])
@@ -166,12 +255,11 @@ server <- function(input,output,session){
           vec <- pull(tib,Common_Anatomical_Entity_Name)
           updateCheckboxGroupInput("cv_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
           updateCheckboxGroupInput("ds_tissue",session=session, choices = vec, inline=FALSE, label = paste("tissues for ", paste(conversion_output_species, collapse=", ")))
-          
-          output$conversion_download <- downloadHandler(filename = function() {
-            paste0("conversion_download", ".csv")
-          },
+          reactive(con)
+          output$conversion_download <- downloadHandler(
+            filename = function() {"conversion_download.csv"},
           content = function(file) {
-            write.csv(conversion_dataframe,file)
+            write.csv(conversion_df(),file)
           })
           })
       })
