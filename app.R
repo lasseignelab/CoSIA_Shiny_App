@@ -6,6 +6,12 @@ library(plotly)
 library(miceadds)
 library(shinyalert)
 library(tidyverse)
+library(org.Hs.eg.db)
+library(org.Mm.eg.db)
+library(org.Rn.eg.db)
+library(org.Dm.eg.db)
+library(org.Dr.eg.db)
+library(org.Ce.eg.db)
 
 options(shiny.maxRequestSize = 7*10^9)
 
