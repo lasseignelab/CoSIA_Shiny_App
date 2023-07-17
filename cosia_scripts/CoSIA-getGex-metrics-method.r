@@ -73,6 +73,61 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   metric_type <- object@metric_type
   metric_type <- as.character(metric_type)
   
+  EHdata_load <- function(map_species) {
+    merged_CoSIAdata <- data.frame(matrix(ncol = 7, nrow = 0))
+    colnames(merged_CoSIAdata) <- c(
+      "Anatomical_entity_name", "Ensembl_ID",
+      "Sample_size", "VST", "Experiment_ID",
+      "Anatomical_entity_ID", "Species"
+    )
+    if (any(map_species == "Mus_musculus")) {
+      print("opening mouse")
+      load("data/EH_Mm.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Mouse)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Mouse)
+    } else if (any(map_species == "Rattus_norvegicus")) {
+      print("opening rat")
+      load("data/EH_Rn.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Rat)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Rat)
+    } else if (any(map_species == "Danio_rerio")) {
+      print("opening zebrafish")
+      load("data/EH_Dr.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Zebrafish)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Zebrafish)
+    } else if (any(map_species == "Homo_sapiens")) {
+      print("opening human")
+      load("data/EH_Hs.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Human)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Human)
+    } else if (any(map_species == "Caenorhabditis_elegans")) {
+      print("opening nematode")
+      load("data/EH_Ce.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Nematode)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Nematode)
+    } else if (any(map_species == "Drosophila_melanogaster")) {
+      print("opening fly")
+      load("data/EH_Dm.RData",envir=.GlobalEnv)
+      merged_CoSIAdata <- rbind(merged_CoSIAdata, GEx_Bulk_Bgee_Fly)
+      merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+      rm(GEx_Bulk_Bgee_Fly)
+    } else {
+      stop("map_species in CoSIAn Object. Make sure the species in
+            the map_species slot are avalible organisms through CoSIA and are in
+            the correct format.")
+    }
+    return(merged_CoSIAdata)
+  }
+  
+  merged_CoSIAdata <- lapply(map_species, EHdata_load)
+  filter_species <- as.data.frame(do.call(rbind, merged_CoSIAdata))
+  rm(merged_CoSIAdata)
+  
   CV_function <- function(x, na.rm = FALSE) {
     stopifnot(is.numeric(x))
     if (na.rm)
@@ -109,11 +164,7 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   }
   
   
-  
   CV_Tissue <- function(map_species, map_tissues) {
-    load("data/EH_Data.RData")
-    filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    rm(Experimental_Hub_File)
     filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
     rm(filter_species)
     id <- as.vector(t(id_dataframe))
@@ -154,9 +205,6 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   }
   
   CV_Species <- function(map_species, map_tissues) {
-    load("data/EH_Data.RData")
-    filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    rm(Experimental_Hub_File)
     id <- as.vector(t(id_dataframe))
     filter_gene <- dplyr::filter(filter_species, Ensembl_ID %in% id)
     rm(filter_species)
@@ -190,9 +238,6 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   
   # DS_Gene : output genes restricted by mapped tissues and gene set
   DS_Gene <- function(map_species, map_tissues) {
-    load("data/EH_Data.RData")
-    filter_species <- dplyr::filter(Experimental_Hub_File, Species %in% map_species)
-    rm(Experimental_Hub_File)
     filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
     rm(filter_species)
     id <- as.vector(t(id_dataframe))
@@ -232,16 +277,30 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   
   # DS_Tissues: output is tissues restricted to mapped tissues and gene set
   DS_Tissue <- function(map_species, map_tissues) {
+    gene_set <- object@gene_set
+    if (length(gene_set)<2){
+      stop("DS_Tissue requires more than one gene.")
+    }
     DS <- data.frame(matrix(ncol = 4, nrow = 0))
     colnames(DS)[which(names(DS) == "map_tissues")] <- "Anatomical_entity_name"
-    load("data/EH_Data.RData")
     for (x in seq_len(length(map_species))) {
-      filter_species <- dplyr::filter(Experimental_Hub_File, Species == map_species[x])
-      filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
+      filter_specific <- dplyr::filter(
+        filter_species,
+        Species == map_species[x]
+      )
+      filter_tissue <- dplyr::filter(
+        filter_specific,
+        Anatomical_entity_name %in% map_tissues
+      )
       id <- as.vector(t(id_dataframe))
       filter_gene <- dplyr::filter(filter_tissue, Ensembl_ID %in% id)
-      filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
-      filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
+      filter_gene$Scaled_Median_VST <- as.numeric(
+        filter_gene$Scaled_Median_VST
+      )
+      filter_gex <- dplyr::select(
+        filter_gene, Anatomical_entity_name,
+        Scaled_Median_VST, Ensembl_ID
+      )
       
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
@@ -271,23 +330,31 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       SDS <- merge(SDS, Species, by = "Anatomical_entity_name")
       DS <- rbind(DS, SDS)
     }
-    Experimental_Hub_File <- NULL
     DS <- data.frame(unique(DS))
     rownames(DS) <- NULL
     return(DS)
-    
   }
+  
   # DS_Gene_all: outputs genes only restricted to selected genes across all tissues
   DS_Gene_all <- function(map_species) {
     DS <- data.frame(matrix(ncol = 4, nrow = 0))
     colnames(DS)[1] <- "Ensembl_ID"
-    load("data/EH_Data.RData")
     for (x in seq_len(length(map_species))) {
-      filter_species <- dplyr::filter(Experimental_Hub_File, Species == map_species[x])
+      filter_specific <- dplyr::filter(
+        filter_species,
+        Species == map_species[x]
+      )
       id <- as.vector(t(id_dataframe))
-      filter_gene <- dplyr::filter(filter_species, Ensembl_ID %in% id)
-      filter_gene$Scaled_Median_VST <- as.numeric(filter_gene$Scaled_Median_VST)
-      filter_gex <- dplyr::select(filter_gene, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
+      filter_gene <- dplyr::filter(filter_specific, Ensembl_ID %in% id)
+      filter_gene$Scaled_Median_VST <- as.numeric(
+        filter_gene$Scaled_Median_VST
+      )
+      filter_gex <- dplyr::select(
+        filter_gene,
+        Anatomical_entity_name,
+        Scaled_Median_VST,
+        Ensembl_ID
+      )
       
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Ensembl_ID, values_from = Scaled_Median_VST)
@@ -316,7 +383,6 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       SDS <- merge(SDS, Species, by = "Ensembl_ID")
       DS <- rbind(DS, SDS)
     }
-    Experimental_Hub_File <- NULL
     DS <- data.frame(unique(DS))
     rownames(DS) <- NULL
     return(DS)
@@ -326,13 +392,22 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
   DS_Tissue_all <- function(map_species, map_tissues) {
     DS <- data.frame(matrix(ncol = 4, nrow = 0))
     colnames(DS)[which(names(DS) == "map_tissues")] <- "Anatomical_entity_name"
-    load("data/EH_Data.RData")
     for (x in seq_len(length(map_species))) {
-      filter_species <- dplyr::filter(Experimental_Hub_File, Species == map_species[x])
-      filter_tissue <- dplyr::filter(filter_species, Anatomical_entity_name %in% map_tissues)
-      filter_tissue$Scaled_Median_VST <- as.numeric(filter_tissue$Scaled_Median_VST)
-      filter_gex <- dplyr::select(filter_tissue, Anatomical_entity_name, Scaled_Median_VST, Ensembl_ID)
-      
+      filter_specific <- dplyr::filter(
+        filter_species,
+        Species == map_species[x]
+      )
+      filter_tissue <- dplyr::filter(
+        filter_specific,
+        Anatomical_entity_name %in% map_tissues
+      )
+      filter_tissue$Scaled_Median_VST <- as.numeric(
+        filter_tissue$Scaled_Median_VST
+      )
+      filter_gex <- dplyr::select(
+        filter_tissue, Anatomical_entity_name,
+        Scaled_Median_VST, Ensembl_ID
+      )
       filter_gex_D <- filter_gex %>% 
         tidyr::pivot_wider(names_from = Anatomical_entity_name, values_from = Scaled_Median_VST)
       filter_gex_D <- filter_gex_D %>% 
@@ -360,7 +435,6 @@ setMethod("getGExMetrics", signature(object = "CoSIAn"), function(object) {
       SDS <- merge(SDS, Species, by = "Anatomical_entity_name")
       DS <- rbind(DS, SDS)
     }
-    Experimental_Hub_File <- NULL
     DS <- data.frame(unique(DS))
     rownames(DS) <- NULL
     return(DS)

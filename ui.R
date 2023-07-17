@@ -78,7 +78,7 @@ CoSIA_about <- tabPanel(
           "(Mus musculus, Rattus norvegicus, Danio rerio, Drosophila melanogaster, 
         and Caenorhabditis elegans)"
         ),
-        "in addition to Homo sapiens."
+        "in addition to", em("Homo sapiens"),"."
       )
     )
   ),
@@ -123,26 +123,26 @@ CoSIA_about <- tabPanel(
       "When starting with gene symbols, you", em("must"), 
       "use species-specific formatting rules.", 
       br(), 
-      "Example: Your gene input is insulin-like growth factor 1.",
+      "Example: Your gene input is insulin-like growth factor receptor 1.",
     ),
     div(
       class="my-list",
       tags$ul(
         tags$li(
           "The HGNC format for human is",
-          strong("IGF1")
+          strong("IGF1R")
         ),
         tags$li(
           "The MGI format for mouse and rat is",
-          strong("Igf1")
+          strong("Igf1r")
         ),
         tags$li(
           "The Flybase format for fly is",
-          strong("daf-2")
+          strong("InR")
         ),
         tags$li(
           "The Wormbase format for nematode is",
-          strong("dilp1")
+          strong("daf-2")
         )
       )
     ),
@@ -237,8 +237,8 @@ CoSIA_about <- tabPanel(
     )
   )
 )
-# Conversion Tab----
-convert_sidebar <- sidebarPanel(
+# Input Tab----
+input_sidebar <- sidebarPanel(
   width = 3,
   wellPanel(
     HTML("<h4>Gene Input</h4>"),
@@ -253,8 +253,123 @@ convert_sidebar <- sidebarPanel(
     ),
     selectInput("gene_input_id_type", "Input ID type",
                 choices = id_type_list, selected = "Select..."
+    ),
+    column(
+      width = 6,
+      fluidRow(
+        actionButton("check_inputs", "Check Inputs")
+      )
+    ),
+    column(
+      width = 6,
+      fluidRow(
+        actionButton("reset_inputs", "Reset Outputs")
+      )
     )
-  ),
+  )
+)
+
+input_main <- mainPanel(
+  div(
+    div(
+      class="conversion-tips",
+      verbatimTextOutput("input_warnings"),
+      h4("Formatting Check"),
+      p(
+        class="my-p-input_1",
+      "IDs that are not formatted for the correct species will cause the app to 
+      error and print below. (see below for formatting tips)"),
+      verbatimTextOutput("input_errors"),
+      h4("Problematic Inputs"),
+      p(
+        class="my-p-input_1",
+        "IDs that were not found in your selected species and ID type will print below."),
+      verbatimTextOutput("input_printed"),
+      verbatimTextOutput("failed_input_check"),
+      br(),
+      br(),
+      hr()
+    ),
+    div(
+      class="conversion-tips",
+      h4(
+        "Input Handling in CoSIA Shiny"
+      ),
+      p(
+        class="my-p-input_2",
+        "In this tab, inputs (in the textbox on the left) will be checked and 
+      corrected for whitespace. Inputs are checked for the correct formatting
+      based on input ID type and species. CoSIA shiny checks for correct Ensembl ID
+        prefixes by species, for numerical input for Entrez IDs, and for basic
+        symbol formatting by species. Check out the example below for symbol 
+        by species formatting.",
+        strong("NOTE:"), 
+        "ID checks are based on pattern matching. This means if you input human 
+        Ensembl IDs but select Symbol as your ID type, 
+        there will be no error message. This is because Symbol checks for human
+        requires inputs to have capitalized text and allows for numbers and 
+        hypens (which also matches ENSG00000123456).",
+        em("Still, the IDs will return as problematic inputs.")
+      ),
+      br(),
+      p(
+        class="my-p-input_2",
+        "When starting with gene symbols, you", em("must"), 
+        "use species-specific formatting rules.", 
+        "Example: Your gene input is insulin-like growth factor 1 receptor.",
+      ),
+      div(
+        class="my-list-inputs",
+        tags$ul(
+          tags$li(
+            "The HGNC format for human is",
+            strong("IGF1R")
+          ),
+          tags$li(
+            "The MGI format for mouse and rat is",
+            strong("Igf1r")
+          ),
+          tags$li(
+            "The Flybase format for fly is",
+            strong("InR")
+          ),
+          tags$li(
+            "The Wormbase format for nematode is",
+            strong("daf-2")
+          )
+        )
+      ),
+      div(
+        p(
+          class="my-p-input_2",
+          "Information for formatting input symbols for human,
+         mouse & rat, and zebrafish can be found using",
+          a(href = "https://www.genenames.org/about/guidelines/","HGNC"),
+          a(href = "https://www.informatics.jax.org/", "MGI"), "or",
+          a(href = "http://zfin.org/action/marker/search", "ZFIN"),
+          "respectively or at",
+          a(href = "https://www.ncbi.nlm.nih.gov/gene", "NCBI"),
+          ". Fly and nematode information can be found using",
+          a(href = "https://flybase.org/", "Flybase"), "and",
+          a(href = "https://wormbase.org/species/c_elegans#014--10","Wormbase"),
+          ", respectively."
+        )
+      )
+    )
+  )
+)
+
+CoSIA_input <- tabPanel(
+  "Inputs",
+  titlePanel("Gene ID Inputs"),
+  sidebarLayout(
+    input_sidebar, input_main
+  )
+)
+
+# Conversion Tab----
+convert_sidebar <- sidebarPanel(
+  width = 3,
   wellPanel(
     HTML("<h4>ID Conversion</h4>"),
     actionButton("conversion_output_instructions", "Formatting Output"),
@@ -275,13 +390,27 @@ convert_sidebar <- sidebarPanel(
 )
 
 convert_main <- mainPanel(
-  downloadButton("conversion_download", "Download File Once Data Table has Loaded"),
+  div(
+    p(
+      class="my-p",
+      strong("NOTE:"),
+      "If you are unsuccessful in obtaining conversions for c_elegans and/or
+      d_melanogaster as outputs, please refresh and attempt with biomaRt as 
+      the tool used for conversion."
+    )
+  ),
+  verbatimTextOutput("convert_errors"),
   dataTableOutput("conversion_table"),# DT:: causes app to break
+  h5("Once IDs are converted, use the button below to download CSV formatted Output:"),
+  verbatimTextOutput("convert_printed"),
+  verbatimTextOutput("convert_warnings"),
+
+  downloadButton("conversion_download", "Download Converted IDs")
   
 )
 
 CoSIA_convert <- tabPanel(
-  "Inputs & Conversions",
+  "Conversions",
   titlePanel("Gene ID and Ortholog Conversion"),
   sidebarLayout(
     convert_sidebar, convert_main
@@ -380,6 +509,7 @@ ui <- navbarPage(
   title = "CoSIA: Cross-Species Investigation & Analysis",
   position = "fixed-top",
   CoSIA_about,
+  CoSIA_input,
   CoSIA_convert,
   CoSIA_PlotExp,
   CoSIA_PlotDS,
