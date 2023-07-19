@@ -123,7 +123,7 @@ CoSIA_about <- tabPanel(
       "When starting with gene symbols, you", em("must"), 
       "use species-specific formatting rules.", 
       br(), 
-      "Example: Your gene input is insulin-like growth factor receptor 1.",
+      "Example: Your gene input is insulin-like growth factor 1 receptor .",
     ),
     div(
       class="my-list",
