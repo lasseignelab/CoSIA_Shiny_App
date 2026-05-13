@@ -22,7 +22,7 @@ tool_list <- c(
 
 homolog_database_list <- c(
   "HomoloGene",
-  "NCBIOrthoAnnotationPipe"
+  "NCBIOrtho"
 )
 # Images
 CoSIAlogo <- "CoSIA_logo.png"
