@@ -1,39 +1,140 @@
-#CoSIA Utility Functions
+# CoSIA Utility Functions
 
-#Find the Available/Common Tissues in CoSIA for a given combination of species
+# Find the Available/Common Tissues in CoSIA for a given combination of species
 
 #' getTissues
 #'
-#' @param species name of a species or multiple species that you want to get available tissue list for
+#' @param species name of a species or multiple species that you want to get
+#' available tissue list for
 #'
-#' @return list of tissues that are common/available among the species or multiple species inputted
-#' @import magrittr
-#' @import dplyr
+#' @return list of tissues that are common/available among the species or
+#' multiple species inputted
 #' @export
 #'
 #' @examples
-#' tissue<-getTissues(c("m_musculus"))
+#' tissue <- getTissues(c("d_rerio"))
+getTissues <- function(species) {
+    # Loading CoSIAdata
+    CoSIAdata_load <- function(species) {
+        eh <- ExperimentHub::ExperimentHub()
+        merged_CoSIAdata <- data.frame(matrix(ncol = 9, nrow = 0))
+        colnames(merged_CoSIAdata) <- c(
+            "Anatomical_entity_name", "Ensembl_ID",
+            "Sample_size", "VST", "Experiment_ID",
+            "Anatomical_entity_ID", "Species", 
+            "Scaled_Median_VST", "mad"
+        )
+        if (any(species == "m_musculus")) {
+            mm_EH_File <- eh[["EH7859"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, mm_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else if (any(species == "r_norvegicus")) {
+            rn_EH_File <- eh[["EH7860"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, rn_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else if (any(species == "d_rerio")) {
+            dr_EH_File <- eh[["EH7861"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, dr_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else if (any(species == "h_sapiens")) {
+            hs_EH_File <- eh[["EH7858"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, hs_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else if (any(species == "c_elegans")) {
+            ce_EH_File <- eh[["EH7863"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, ce_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else if (any(species == "d_melanogaster")) {
+            dm_EH_File <- eh[["EH7862"]][[1]]
+            merged_CoSIAdata <- rbind(merged_CoSIAdata, dm_EH_File)
+            merged_CoSIAdata <- as.data.frame(merged_CoSIAdata)
+        } else {
+            stop("Issue with species in CoSIAn Object. Make sure the species in the
+          species argument are avalible organisms through CoSIA and are in the
+          correct format.")
+        }
+        return(merged_CoSIAdata)
+    }
+    
+    merged_CoSIAdata <- lapply(species, CoSIAdata_load)
+    merged_CoSIAdata <- dplyr::bind_rows(merged_CoSIAdata)
 
-getTissues<- function(species) {
-  List_of_Tissues<-tissues_file %>% dplyr::group_by(Anatomical_entity_name) %>% dplyr::summarise(Anatomical_entity_ID = unique(Anatomical_entity_ID), Species=unique(Species))
-  Species_SWITCH <- Vectorize(vectorize.args = "species", FUN = function(species) {
-    switch(as.character(species),
-           h_sapiens ="Homo_sapiens",
-           m_musculus = "Mus_musculus",
-           r_norvegicus = "Rattus_norvegicus",
-           d_rerio = "Danio_rerio",
-           d_melanogaster = "Drosophila_melanogaster",
-           c_elegans = "Caenorhabditis_elegans",
-           stop("Error: Invalid species. Make sure you have choosen an avaliable species in CoSIA")
-    )})
-  species<-Species_SWITCH(species)
-  #load the EH data here
-  LOT<-dplyr::filter(List_of_Tissues, Species %in% species)
-  LOT<-subset(LOT, select = -c(Species))
-  L<-LOT %>% dplyr::summarise(Frequency = table(Anatomical_entity_name))
-  frequency_value<-length(species)
-  common_tissue<-dplyr::filter(L, Frequency == frequency_value)
-  common_tissue<-subset(common_tissue, select = -c(Frequency))
-  colnames(common_tissue)[which(names(common_tissue) == "Anatomical_entity_name")] <- 'Common_Anatomical_Entity_Name'
-  return(common_tissue)
+
+    List_of_Tissues <- merged_CoSIAdata %>%
+        dplyr::group_by(Anatomical_entity_name) %>%
+        dplyr::reframe(
+            Anatomical_entity_ID = unique(Anatomical_entity_ID),
+            Species = unique(Species)
+        )
+    L <- List_of_Tissues %>% dplyr::group_by(Anatomical_entity_name)%>%
+        dplyr::reframe(Frequency = table(Anatomical_entity_name))
+    frequency_value <- length(species)
+    common_tissue <- dplyr::filter(L, Frequency == frequency_value)
+    common_tissue <- subset(common_tissue, select = -c(Frequency))
+    colnames(common_tissue)[which(names(common_tissue) ==
+        "Anatomical_entity_name")] <- "Common_Anatomical_Entity_Name"
+    return(common_tissue)
 }
+
+#CoSIA Accessor Functions
+
+#' viewCoSIAn Generics
+#'
+#' @param object CoSIAn object with all user accessible slots filled
+#' @param slot_name name of output slots
+#'
+#' @return initializes a generic function for viewCoSIAn as preparation for
+#' defining the viewCoSIAn Method 
+#' @export
+#'
+#' @examples
+#' Kidney_Genes <- CoSIAn(
+#'     gene_set = c("ENSG00000008710", "ENSG00000152217"),
+#'     i_species = "h_sapiens", input_id = "Ensembl_id",
+#'     o_species = c(
+#'         "d_melanogaster"
+#'     ),
+#'     output_ids = c("Ensembl_id", "Symbol"), mapping_tool = "annotationDBI",
+#'     ortholog_database = "HomoloGene", map_tissues = "heart",
+#'     map_species = c("d_melanogaster"), metric_type = "DS_Gene"
+#' )
+#' viewCoSIAn(Kidney_Genes, "converted_id")
+#' 
+setGeneric(
+  "viewCoSIAn", 
+  function(object, slot_name) standardGeneric("viewCoSIAn"))
+
+#' viewCoSIAn
+#'
+#' @param object CoSIAn object with all user accessible slots filled
+#' @param slot_name name of output slots
+#' @return slots in CoSIAn object
+#' @export
+#'
+#' @examples
+#' Kidney_Genes <- CoSIAn(
+#'     gene_set = c("ENSG00000008710", "ENSG00000152217"),
+#'     i_species = "h_sapiens", input_id = "Ensembl_id",
+#'     o_species = c(
+#'         "d_melanogaster"
+#'     ),
+#'     output_ids = c("Ensembl_id", "Symbol"), mapping_tool = "annotationDBI",
+#'     ortholog_database = "HomoloGene", map_tissues = "heart",
+#'     map_species = c("d_melanogaster"), metric_type = "DS_Gene"
+#' )
+#' viewCoSIAn(Kidney_Genes, "converted_id")
+setMethod(
+  "viewCoSIAn",
+  signature(object = "CoSIAn"),
+  function(object, slot_name) {
+    if (slot_name == "converted_id") {
+        object@converted_id
+    } else if (slot_name == "gex") {
+        object@gex
+    } else if (slot_name == "metric") {
+        object@metric
+    } else {
+        stop("User provided slot does not exist")
+    }
+  }
+)
