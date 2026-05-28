@@ -398,7 +398,7 @@ convert_main <- mainPanel(
       d_melanogaster as outputs, please refresh and attempt with biomaRt as 
       the tool used for conversion. The HomoloGene ortholog database was last
       updated in 2014. If expected orthologs are missing, select NCBIOrtho as
-      the database but be aware it is much slower and my take a few minutes to
+      the database but be aware it is much slower and may take a few minutes to
       produce results."
     )
   ),
