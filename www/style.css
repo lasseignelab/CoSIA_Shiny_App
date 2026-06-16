@@ -96,8 +96,19 @@ h4{
 }
 
 .branding {
-  
+
   font-size: .8em;
-  
+
   text-align: center;
+}
+
+#plot_gene ~ .selectize-control .selectize-input .item {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#plot_gene ~ .selectize-control .selectize-input {
+  overflow: hidden;
 }
