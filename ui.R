@@ -22,7 +22,7 @@ tool_list <- c(
 
 homolog_database_list <- c(
   "HomoloGene",
-  "NCBIOrthoAnnotationPipe"
+  "NCBIOrtho"
 )
 # Images
 CoSIAlogo <- "CoSIA_logo.png"
@@ -396,7 +396,10 @@ convert_main <- mainPanel(
       strong("NOTE:"),
       "If you are unsuccessful in obtaining conversions for c_elegans and/or
       d_melanogaster as outputs, please refresh and attempt with biomaRt as 
-      the tool used for conversion."
+      the tool used for conversion. The HomoloGene ortholog database was last
+      updated in 2014. If expected orthologs are missing, select NCBIOrtho as
+      the database but be aware it is much slower and may take a few minutes to
+      produce results."
     )
   ),
   verbatimTextOutput("convert_errors"),
